@@ -1,12 +1,17 @@
 import React from 'react'
 import { FiSearch } from 'react-icons/fi'
 import AvaterIcon from './AvaterIcon'
+import clsx from 'clsx'
 
-interface Props {}
+interface Props
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLElement>,
+    HTMLElement
+  > {}
 
-const Header: React.FC<Props> = () => {
+const Header: React.FC<Props> = ({ className, ...props }) => {
   return (
-    <header className="bg-[#301134] flex">
+    <header className={clsx(className, 'bg-[#301134] flex items-center')}>
       <div className="relative my-2 ml-auto">
         <input
           type="search"
