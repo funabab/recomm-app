@@ -3,9 +3,9 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Lato } from 'next/font/google'
 import clsx from 'clsx'
-import DepertmentSelectionList from '@/components/DepertmentSelectionList'
 import { BiChevronDown } from 'react-icons/bi'
-import DepartmentChannelList from '@/components/DepartmentChannelList'
+import DepartmentChannelList from '@/containers/chat/DepartmentChannelList'
+import DepertmentSelectionList from '@/containers/chat/DepertmentSelectionList'
 
 const fontLato = Lato({ subsets: ['latin'], weight: ['400', '700', '900'] })
 
@@ -41,7 +41,9 @@ export default function RootLayout({
                   <DepartmentChannelList />
                 </div>
               </aside>
-              <main className="bg-white">{children}</main>
+              <main className="bg-white flex-1 min-w-0 min-h-0 relative">
+                {children}
+              </main>
             </div>
           </div>
         </div>
