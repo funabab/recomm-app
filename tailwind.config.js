@@ -10,5 +10,11 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwind-scrollbar')({ nocompatible: true })],
+  daisyui: {
+    themes: ['winter'],
+  },
+  plugins: [
+    require('tailwind-scrollbar')({ nocompatible: true }),
+    require('daisyui'),
+  ],
 }
