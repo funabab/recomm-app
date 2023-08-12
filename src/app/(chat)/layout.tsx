@@ -1,9 +1,9 @@
-import './globals.css'
+import './styles/globals.css'
 
 import type { Metadata } from 'next'
 import { BiMenuAltLeft, BiSearch } from 'react-icons/bi'
 import { RxCaretDown } from 'react-icons/rx'
-import { AiFillAlert, AiOutlineFile } from 'react-icons/ai'
+import { AiFillAlert, AiOutlineComment, AiOutlineFile } from 'react-icons/ai'
 import { LiaEdit } from 'react-icons/lia'
 import clsx from 'clsx'
 import { fontLato } from '@/utils/fonts'
@@ -27,7 +27,7 @@ export default function RootLayout({
       <body className="h-full">
         <main className="flex flex-col h-full">
           <header className="shrink-0 bg-base-300 pt-[7px] pb-[6px] justify-center items-center flex gap-x-[21px] px-5 border-b border-b-neutral-content">
-            <h1 className="font-lato uppercase ml-24 font-bold text-primary underline underline-offset-4 decoration-dashed hidden lg:block">
+            <h1 className="font-lato uppercase ml-20 font-bold text-primary underline underline-offset-4 decoration-dashed hidden lg:block">
               Recomm App
             </h1>
             <label
@@ -59,8 +59,8 @@ export default function RootLayout({
               type="checkbox"
               className="drawer-toggle"
             />
-            <div className="drawer-content relative bg-base-100">
-              <main>{children}</main>
+            <div className="drawer-content min-h-0 relative bg-base-100">
+              <main className="w-full h-full">{children}</main>
             </div>
             <div className="drawer-side h-full">
               <label
@@ -99,22 +99,22 @@ export default function RootLayout({
                 </div>
                 <div className="w-[262px]">
                   <div className="py-2 px-3 border-b border-neutral-content flex justify-between items-center">
-                    <button className="btn btn-ghost text-[15px] font-lato">
+                    <button className="btn btn-ghost text-[15px] font-lato text-primary">
                       Channel
                       <RxCaretDown />
                     </button>
 
-                    <button className="btn btn-circle btn-accent text-xl">
+                    <button className="btn btn-circle btn-accent text-xl text-primary">
                       <LiaEdit />
                     </button>
                   </div>
 
                   <div>
                     <button className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary">
-                      <AiFillAlert />
+                      <AiOutlineComment />
                       Notice Board
                     </button>
-                    <button className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-neutral-700">
+                    <button className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary">
                       <AiOutlineFile />
                       Resources
                     </button>
