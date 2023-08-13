@@ -8,10 +8,12 @@ import { departmentConverter } from '@/firebase/converters'
 import dayjs from 'dayjs'
 import Loader from '@/app/components/Loader'
 import BackofficeCreateDepartmentModal from './BackofficeCreateDepartmentModal'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { Department } from '@/typings'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import BackofficeEditDepartmentModal from './BackofficeEditDepartmentModal'
+import { deleteDepartment } from '../actions'
+import { toast } from 'react-hot-toast'
 
 export default function BackofficeTabDepartments() {
   const [departments, isLoading] = useCollectionData(
@@ -23,6 +25,8 @@ export default function BackofficeTabDepartments() {
     )
   )
   const [editDepartment, setEditDepartment] = useState<Department | undefined>()
+  const [isDeleteDepartmentPending, startDeleteDepartmentTransition] =
+    useTransition()
 
   return (
     <div className="py-5">
@@ -62,7 +66,7 @@ export default function BackofficeTabDepartments() {
                   <td>
                     <DropdownMenu.Root>
                       <DropdownMenu.Trigger asChild>
-                        <button className="btn btn-circle btn-ghost text-2xl">
+                        <button className="btn btn-circle btn-ghost text-2xl outline-none">
                           <CiCircleMore />
                         </button>
                       </DropdownMenu.Trigger>
@@ -76,6 +80,32 @@ export default function BackofficeTabDepartments() {
                             >
                               <li onClick={() => setEditDepartment(department)}>
                                 <a>Edit</a>
+                              </li>
+                            </DropdownMenu.Item>
+
+                            <DropdownMenu.Item
+                              className="cursor-pointer outline-none font-lato font-bold text-error"
+                              asChild
+                            >
+                              <li
+                                onClick={() => {
+                                  if (isDeleteDepartmentPending) {
+                                    return
+                                  }
+                                  const toastId = toast.loading(
+                                    `Deleting ${department.title} departmemt`
+                                  )
+                                  startDeleteDepartmentTransition(async () => {
+                                    const { message } = await deleteDepartment(
+                                      department.id
+                                    )
+                                    toast.success(message, {
+                                      id: toastId,
+                                    })
+                                  })
+                                }}
+                              >
+                                <a>Delete</a>
                               </li>
                             </DropdownMenu.Item>
                             <DropdownMenu.Arrow className="fill-white" />

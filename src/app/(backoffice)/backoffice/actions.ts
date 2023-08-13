@@ -35,6 +35,13 @@ export const editDepartment = async (formdata: FormData) => {
   }
 }
 
+export const deleteDepartment = async (departmentId: string) => {
+  await firebaseAdminFirestore.doc(`departments/${departmentId}`).delete()
+  return {
+    message: 'Department updated successfully',
+  }
+}
+
 export const inviteUserToDepartment = async (formdata: FormData) => {
   const fullName = formdata.get('fullname') as string
   const email = formdata.get('email') as string
