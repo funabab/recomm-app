@@ -1,4 +1,4 @@
-import { getFirestore } from 'firebase-admin/firestore'
+import { getFirestore } from 'firebase/firestore'
 import { getApp, getApps, initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 
