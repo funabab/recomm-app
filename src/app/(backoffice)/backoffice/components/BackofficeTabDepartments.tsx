@@ -11,13 +11,14 @@ import { DocumentData, collection, orderBy, query } from 'firebase/firestore'
 import { firebaseFirestore } from '@/firebase/client'
 import { departmentConverter } from '@/firebase/converters'
 import dayjs from 'dayjs'
+import Loader from '@/app/components/Loader'
 
 export default function BackofficeTabDepartments() {
   const [isPending, startTransition] = useTransition()
   const [createDepartmentDialogOpen, setCreateDepartmentDialogOpen] =
     useState(false)
   const formRef = useRef<HTMLFormElement>(null)
-  const [departments] = useCollectionData(
+  const [departments, isLoading] = useCollectionData(
     query(
       collection(firebaseFirestore, 'departments').withConverter(
         departmentConverter
@@ -112,34 +113,40 @@ export default function BackofficeTabDepartments() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Department</th>
-              <th>Created At</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {departments?.map((department, index) => (
-              <tr key={department.id}>
-                <td>{index + 1}</td>
-                <td>{department.title}</td>
-                <td>{department.description}</td>
-                <td>
-                  {dayjs(department.createdAt.toDate()).format('DD MMMM, YYYY')}
-                </td>
-                <td>
-                  <button className="btn btn-circle btn-ghost text-2xl">
-                    <CiCircleMore />
-                  </button>
-                </td>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Created At</th>
+                <th></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {departments?.map((department, index) => (
+                <tr key={department.id}>
+                  <td>{index + 1}</td>
+                  <td>{department.title}</td>
+                  <td>{department.description}</td>
+                  <td>
+                    {dayjs(department.createdAt.toDate()).format(
+                      'DD MMMM, YYYY'
+                    )}
+                  </td>
+                  <td>
+                    <button className="btn btn-circle btn-ghost text-2xl">
+                      <CiCircleMore />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   )
