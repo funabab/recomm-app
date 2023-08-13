@@ -1,9 +1,11 @@
 'use server'
 
 import { firebaseAdminFirestore } from '@/firebase/admin'
+import { Department, UserRole } from '@/typings'
 import { USER_ROLES } from '@/utils/constants'
 import { resend, resendSender } from '@/utils/email'
-import { FieldValue } from 'firebase-admin/firestore'
+import dayjs from 'dayjs'
+import { FieldValue, Timestamp } from 'firebase-admin/firestore'
 
 export const createDepartment = async (formdata: FormData) => {
   const title = formdata.get('title') as string
@@ -47,6 +49,11 @@ export const inviteUserToDepartment = async (formdata: FormData) => {
   const email = formdata.get('email') as string
   const department = formdata.get('department') as string
   const role = formdata.get('role') as string
+  const expiryDate = dayjs().add(15, 'minute')
+
+  const departmentDoc = (
+    await firebaseAdminFirestore.doc(`departments/${department}`).get()
+  ).data() as Department
 
   const invitationDoc = await firebaseAdminFirestore
     .collection('invitations')
@@ -55,23 +62,35 @@ export const inviteUserToDepartment = async (formdata: FormData) => {
       email,
       department,
       role,
+      expiresAt: Timestamp.fromDate(expiryDate.toDate()),
       createdAt: FieldValue.serverTimestamp(),
     })
 
   await resend.emails.send({
     from: resendSender,
     to: [email],
-    subject: `Invitation to join ${department} department`,
-    text: `Hi ${fullName}, you have been invited to join ${department} department as ${[
-      USER_ROLES[role],
+    subject: `Invitation to join ${departmentDoc.title} department`,
+    text: `Hi ${fullName}, you have been invited to join ${
+      departmentDoc.title
+    } department as ${[
+      USER_ROLES[role as UserRole],
     ]}. \n\n Click this link to accept the invitation: ${
       process.env.NEXT_PUBLIC_BASE_URL
     }/invitation/${
       invitationDoc.id
-    } \n\n If you have any questions, please contact Technical Administrator. \n\n Thanks, \n ${department} department`,
+    } \n\n If you have any questions, please contact Technical Administrator. \n\n Thanks, \n ${
+      departmentDoc.title
+    } department`,
   })
 
   return {
     message: 'User Invitation sent successfully to ' + email,
+  }
+}
+
+export const deleteUserInvitation = async (invitationId: string) => {
+  await firebaseAdminFirestore.doc(`invitations/${invitationId}`).delete()
+  return {
+    message: 'Invitation deleted successfully',
   }
 }

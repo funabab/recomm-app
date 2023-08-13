@@ -98,7 +98,7 @@ export default function BackofficeTabUsers() {
                             Select Department
                           </option>
                           {departments?.map((department) => (
-                            <option key={department.id}>
+                            <option key={department.id} value={department.id}>
                               {department.title}
                             </option>
                           ))}
@@ -119,7 +119,9 @@ export default function BackofficeTabUsers() {
                             Select Role
                           </option>
                           {Object.entries(USER_ROLES).map(([key, role]) => (
-                            <option key={key}>{role}</option>
+                            <option key={key} value={key}>
+                              {role}
+                            </option>
                           ))}
                         </select>
                       </div>

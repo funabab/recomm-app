@@ -1,4 +1,4 @@
-export const USER_ROLES: Record<string, string> = {
+export const USER_ROLES = {
   admin: 'Adminstrator 👷🏾',
   hod: 'HOD 🧑🏾‍🏫',
   staff: 'Staff 🧑🏾‍💼',
