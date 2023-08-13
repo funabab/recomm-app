@@ -18,7 +18,7 @@ export default function ChannelListAccordion(props: Props) {
         </Accordion.Header>
         <Accordion.Content>
           <Link
-            href=""
+            href="#"
             className="btn btn-ghost font-lato w-full rounded-none justify-start pl-6 text-sm min-h-0 h-10 text-neutral"
           >
             <BiHash />

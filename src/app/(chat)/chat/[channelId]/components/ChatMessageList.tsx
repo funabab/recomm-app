@@ -1,13 +1,12 @@
-import React from 'react'
 import {
   AiOutlineMessage,
   AiOutlineStar,
   AiOutlineUserAdd,
 } from 'react-icons/ai'
-import ChannelChatMessageInput from './components/ChannelChatMessageInput'
-import ChannelChatMessage from './components/ChannelChatMessage'
+import ChannelChatMessageInput from '@/app/(chat)/components/ChannelChatMessageInput'
+import ChannelChatMessage from '@/app/(chat)/components/ChannelChatMessage'
 
-export default function DepartmentChannelChat() {
+export default function ChatMessageList() {
   return (
     <div className="w-full h-full flex flex-col">
       <header className="pt-[13px] pb-[3px] px-[22px] border-b border-b-neutral-content flex flex-row items-center justify-between">
@@ -23,7 +22,7 @@ export default function DepartmentChannelChat() {
             <span className="pl-1 pr-2 border-r border-r-neutral-content">
               13
             </span>
-            <span className="px-2">
+            <span className="px-2 truncate max-w-[10rem] lg:max-w-2xl">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas,
               voluptatum!
             </span>

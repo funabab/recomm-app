@@ -16,7 +16,10 @@ export default function ChannelChatMessage({ message }: Props) {
             <strong className="text-[15px] font-extrabold">Dr. Peters</strong>
             <span className="text-xs font-medium text-neutral/80">6:49 PM</span>
           </p>
-          <p className="mt-1 font-lato text-[15px] text-neutral">{message}</p>
+          <span className="text-xs ml-1 font-medium text-neutral/80">
+            Adminstrator 👷🏾‍♂️
+          </span>
+          <p className="mt-2 font-lato text-[15px] text-neutral">{message}</p>
         </div>
       </div>
     </div>
