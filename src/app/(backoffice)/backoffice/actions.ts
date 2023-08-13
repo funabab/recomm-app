@@ -51,10 +51,15 @@ export const inviteUserToDepartment = async (formdata: FormData) => {
   const role = formdata.get('role') as string
   const expiryDate = dayjs().add(15, 'minute')
 
-  const departmentDoc = (
-    await firebaseAdminFirestore.doc(`departments/${department}`).get()
-  ).data() as Department
+  const departmentDoc = await firebaseAdminFirestore
+    .doc(`departments/${department}`)
+    .get()
 
+  if (!departmentDoc.exists) {
+    throw new Error('Department does not exist')
+  }
+
+  const departmentData = departmentDoc.data() as Department
   const invitationDoc = await firebaseAdminFirestore
     .collection('invitations')
     .add({
@@ -69,9 +74,9 @@ export const inviteUserToDepartment = async (formdata: FormData) => {
   await resend.emails.send({
     from: resendSender,
     to: [email],
-    subject: `Invitation to join ${departmentDoc.title} department`,
+    subject: `Invitation to join ${departmentData.title} department`,
     text: `Hi ${fullName}, you have been invited to join ${
-      departmentDoc.title
+      departmentData.title
     } department as ${[
       USER_ROLES[role as UserRole],
     ]}. \n\n Click this link to accept the invitation: ${
@@ -79,7 +84,7 @@ export const inviteUserToDepartment = async (formdata: FormData) => {
     }/invitation/${
       invitationDoc.id
     } \n\n If you have any questions, please contact Technical Administrator. \n\n Thanks, \n ${
-      departmentDoc.title
+      departmentData.title
     } department`,
   })
 
