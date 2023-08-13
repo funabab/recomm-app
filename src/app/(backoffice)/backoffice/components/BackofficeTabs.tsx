@@ -1,6 +1,7 @@
 'use client'
 import * as Tabs from '@radix-ui/react-tabs'
 import BackofficeTabDepartments from './BackofficeTabDepartments'
+import BackofficeTabUsers from './BackofficeTabUsers'
 
 export default function BackofficeTabs() {
   return (
@@ -32,7 +33,9 @@ export default function BackofficeTabs() {
       <Tabs.Content value="departments">
         <BackofficeTabDepartments />
       </Tabs.Content>
-      <Tabs.Content value="users"></Tabs.Content>
+      <Tabs.Content value="users">
+        <BackofficeTabUsers />
+      </Tabs.Content>
       <Tabs.Content value="invitaions"></Tabs.Content>
     </Tabs.Root>
   )
