@@ -1,11 +1,11 @@
 'use server'
 
 import { firebaseAdminFirestore } from '@/firebase/admin'
-import { Department, UserRole } from '@/typings'
-import { USER_ROLES } from '@/utils/constants'
+import { FieldValue, Timestamp } from 'firebase-admin/firestore'
 import { resend, resendSender } from '@/utils/email'
 import dayjs from 'dayjs'
-import { FieldValue, Timestamp } from 'firebase-admin/firestore'
+import { USER_ROLES } from '@/utils/constants'
+import { Department, UserRole } from '@/typings'
 
 export const createDepartment = async (formdata: FormData) => {
   const title = formdata.get('title') as string

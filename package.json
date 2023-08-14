@@ -37,6 +37,7 @@
     "eslint-config-next": "13.4.9",
     "firebase": "^10.0.0",
     "firebase-admin": "^11.10.1",
+    "jose": "^4.14.4",
     "next": "13.4.9",
     "postcss": "^8.4.25",
     "postcss-hover-media-feature": "^1.0.2",
@@ -55,6 +56,7 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "daisyui": "^3.5.1"
+    "daisyui": "^3.5.1",
+    "encoding": "^0.1.13"
   }
 }
