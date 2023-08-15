@@ -46,8 +46,9 @@ export default function BackofficeTabDepartments() {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Name</th>
-                <th>Department</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th className="text-center">Members</th>
                 <th>Created At</th>
                 <th></th>
               </tr>
@@ -58,6 +59,9 @@ export default function BackofficeTabDepartments() {
                   <td>{index + 1}</td>
                   <td>{department.title}</td>
                   <td>{department.description}</td>
+                  <td className="text-center">
+                    {Number(department.membersCount) || 0}
+                  </td>
                   <td>
                     {dayjs(department.createdAt.toDate()).format(
                       'DD MMMM, YYYY'
