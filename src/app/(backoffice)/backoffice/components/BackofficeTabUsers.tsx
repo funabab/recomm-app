@@ -6,20 +6,31 @@ import { RxCross2 } from 'react-icons/rx'
 import { inviteUserToDepartment } from '@/app/actions/department'
 import { toast } from 'react-hot-toast'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
-import { collection } from 'firebase/firestore'
+import { collection, orderBy, query } from 'firebase/firestore'
 import { firebaseFirestore } from '@/firebase/client'
-import { departmentConverter } from '@/firebase/converters'
+import { departmentConverter, userConverter } from '@/firebase/converters'
 import Loader from '@/app/components/Loader'
 import { USER_ROLES } from '@/utils/constants'
+import dayjs from 'dayjs'
 
 export default function BackofficeTabUsers() {
-  const [isPending, startTransition] = useTransition()
   const [createUserDialogOpen, setCreateUserDialogOpen] = useState(false)
+  const [isPendingTransition, startTransition] = useTransition()
   const formRef = useRef<HTMLFormElement>(null)
 
+  const [users] = useCollectionData(
+    query(
+      collection(firebaseFirestore, 'users').withConverter(userConverter),
+      orderBy('createdAt', 'desc')
+    )
+  )
+
   const [departments, isLoadingDepartments] = useCollectionData(
-    collection(firebaseFirestore, 'departments').withConverter(
-      departmentConverter
+    query(
+      collection(firebaseFirestore, 'departments').withConverter(
+        departmentConverter
+      ),
+      orderBy('createdAt', 'desc')
     )
   )
 
@@ -133,9 +144,9 @@ export default function BackofficeTabUsers() {
                   <button
                     type="submit"
                     className="btn btn-primary"
-                    disabled={isPending || isLoadingDepartments}
+                    disabled={isPendingTransition || isLoadingDepartments}
                   >
-                    {(isPending || isLoadingDepartments) && (
+                    {(isPendingTransition || isLoadingDepartments) && (
                       <span className="loading loading-spinner"></span>
                     )}
                     Save Details
@@ -172,23 +183,23 @@ export default function BackofficeTabUsers() {
               </tr>
             </thead>
             <tbody>
-              {/* {departments?.map((department, index) => (
-                <tr key={department.id}>
+              {users?.map((user, index) => (
+                <tr key={user.uid}>
                   <td>{index + 1}</td>
-                  <td>{department.title}</td>
-                  <td>{department.description}</td>
+                  <td>{user.displayName}</td>
+                  <td>{user.email}</td>
                   <td>
-                    {dayjs(department.createdAt.toDate()).format(
-                      'DD MMMM, YYYY'
+                    {user.memberships
+                      ?.map((membership) => membership.departmentTitle)
+                      .join(', ')}
+                  </td>
+                  <td>
+                    {dayjs(user.createdAt.toDate()).format(
+                      'DD MMMM, YYYY HH:mm:ss'
                     )}
                   </td>
-                  <td>
-                    <button className="btn btn-circle btn-ghost text-2xl">
-                      <CiCircleMore />
-                    </button>
-                  </td>
                 </tr>
-              ))} */}
+              ))}
             </tbody>
           </table>
         )}

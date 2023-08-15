@@ -1,10 +1,11 @@
 import React, { useTransition } from 'react'
 import { toast } from 'react-hot-toast'
-import { firebaseAuth } from '@/firebase/client'
+import { firebaseAuth, firebaseFirestore } from '@/firebase/client'
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
 import { FIREBASE_ERRORS } from '@/utils/constants'
 import { FirebaseError } from '@firebase/util'
-import { User, updateProfile } from 'firebase/auth'
+import { User } from 'firebase/auth'
+import { doc, setDoc } from 'firebase/firestore'
 
 interface Props {
   invitationId?: string
@@ -39,9 +40,15 @@ export default function AuthCreateAccountCard({
             startTransition(async () => {
               try {
                 const userCredential = await signup(email, password)
-                await updateProfile(userCredential!.user, {
-                  displayName: fullname,
-                })
+                await setDoc(
+                  doc(firebaseFirestore, `users/${userCredential?.user.uid}`),
+                  {
+                    displayName: fullname,
+                  },
+                  {
+                    merge: true,
+                  }
+                )
 
                 toast.success('Account created successfully', {
                   id: toastId,
