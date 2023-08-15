@@ -35,7 +35,7 @@ export const onAccountCreated = functions.auth.user().onCreate((user) => {
   delete data.displayName
   delete data.photoURL
 
-  return firestore.doc(`users/${user.uid}`).set(data)
+  return firestore.doc(`users/${user.uid}`).set(data, { merge: true })
 })
 
 export const onDepartmentMembersCollectionUpdated = onDocumentWritten(
