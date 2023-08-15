@@ -1,4 +1,4 @@
-import React, { useTransition } from 'react'
+import React, { useEffect, useTransition } from 'react'
 import { toast } from 'react-hot-toast'
 import { firebaseAuth, firebaseFirestore } from '@/firebase/client'
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
@@ -18,8 +18,15 @@ export default function AuthCreateAccountCard({
   onUserLoggedIn,
   onClickLoginAccount,
 }: Props) {
-  const [signup] = useCreateUserWithEmailAndPassword(firebaseAuth)
+  const [signup, _user, _isLoadingSignup, error] =
+    useCreateUserWithEmailAndPassword(firebaseAuth)
   const [isPendingTransition, startTransition] = useTransition()
+
+  useEffect(() => {
+    if (error) {
+      toast.error(FIREBASE_ERRORS[error.code as keyof typeof FIREBASE_ERRORS])
+    }
+  }, [error])
 
   return (
     <div className="w-[500px] max-w-[95vw] rounded-lg bg-white py-10 flex flex-col px-10 relative">
@@ -38,22 +45,25 @@ export default function AuthCreateAccountCard({
             startTransition(async () => {
               try {
                 const userCredential = await signup(email, password)
-                await setDoc(
-                  doc(firebaseFirestore, `users/${userCredential?.user.uid}`),
-                  {
-                    displayName: fullname,
-                  },
-                  {
-                    merge: true,
-                  }
-                )
+                if (userCredential) {
+                  await setDoc(
+                    doc(firebaseFirestore, `users/${userCredential?.user.uid}`),
+                    {
+                      displayName: fullname,
+                    },
+                    {
+                      merge: true,
+                    }
+                  )
 
-                toast.success('Account created successfully')
-                onUserLoggedIn?.({
-                  ...userCredential!.user,
-                  displayName: fullname,
-                })
+                  toast.success('Account created successfully')
+                  onUserLoggedIn?.({
+                    ...userCredential!.user,
+                    displayName: fullname,
+                  })
+                }
               } catch (e) {
+                console.error(e)
                 const err = e as FirebaseError
                 toast.error(
                   FIREBASE_ERRORS[err.code as keyof typeof FIREBASE_ERRORS]

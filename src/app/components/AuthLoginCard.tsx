@@ -32,7 +32,9 @@ export default function AuthLoginCard({
 
             startTransition(async () => {
               const userCredential = await login(email, password)
-              onUserLoggedIn?.(userCredential!.user)
+              if (userCredential) {
+                onUserLoggedIn?.(userCredential!.user)
+              }
             })
           }}
         >

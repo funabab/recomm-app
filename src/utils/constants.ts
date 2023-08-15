@@ -6,4 +6,5 @@ export const USER_ROLES = {
 
 export const FIREBASE_ERRORS = {
   'auth/email-already-exists': 'Account with email already exists',
+  'auth/email-already-in-use': 'Account with email already exists',
 }
