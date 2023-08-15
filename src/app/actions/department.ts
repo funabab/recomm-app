@@ -51,6 +51,16 @@ export const inviteUserToDepartment = async (formdata: FormData) => {
   const role = formdata.get('role') as string
   const expiryDate = dayjs().add(15, 'minute')
 
+  const existingMembership = await firebaseAdminFirestore
+    .collection('departmentMembers')
+    .where('userEmail', '==', email)
+    .where('departmentId', '==', department)
+    .get()
+
+  if (!existingMembership.empty) {
+    throw new Error('User is already a member of this department')
+  }
+
   const departmentDoc = await firebaseAdminFirestore
     .doc(`departments/${department}`)
     .get()

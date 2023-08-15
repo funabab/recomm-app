@@ -5,6 +5,7 @@ import { firebaseAuth, firebaseFunctions } from '@/firebase/client'
 import { Department, Invitation } from '@/typings'
 import { USER_ROLES } from '@/utils/constants'
 import { User } from 'firebase/auth'
+import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
@@ -25,6 +26,7 @@ export default function UserInvitationCard({ department, invitation }: Props) {
     firebaseFunctions,
     'acceptDepartmentInvitation'
   )
+  const router = useRouter()
 
   const handleUserLoggedIn = useCallback(
     (user: User) => {
@@ -41,6 +43,7 @@ export default function UserInvitationCard({ department, invitation }: Props) {
           if (data) {
             toast.success(data.message, { id: toastId })
             setInvitationState('accepted')
+            router.replace('/chat')
           } else {
             throw new Error("Something wen't wrong")
           }
@@ -51,14 +54,16 @@ export default function UserInvitationCard({ department, invitation }: Props) {
           setInvitationState('unaccepted')
         })
     },
-    [acceptDepartmentInvitation, invitation.id]
+    [acceptDepartmentInvitation, invitation.id, router]
   )
 
   const handleAcceptInvitation = useCallback(() => {
     if (!user) {
       setShowAuthModal(true)
+    } else {
+      handleUserLoggedIn(user)
     }
-  }, [user])
+  }, [handleUserLoggedIn, user])
 
   return (
     <div className="w-96 max-w-[95vw] rounded-lg bg-base-300 py-10 flex flex-col items-center px-10 relative">

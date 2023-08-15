@@ -31,8 +31,6 @@ export default function AuthCreateAccountCard({
 
         <form
           action={(formdata) => {
-            const toastId = toast.loading('Creating account...')
-
             const email = formdata.get('email') as string
             const password = formdata.get('password') as string
             const fullname = formdata.get('fullname') as string
@@ -50,9 +48,7 @@ export default function AuthCreateAccountCard({
                   }
                 )
 
-                toast.success('Account created successfully', {
-                  id: toastId,
-                })
+                toast.success('Account created successfully')
                 onUserLoggedIn?.({
                   ...userCredential!.user,
                   displayName: fullname,
@@ -60,10 +56,7 @@ export default function AuthCreateAccountCard({
               } catch (e) {
                 const err = e as FirebaseError
                 toast.error(
-                  FIREBASE_ERRORS[err.code as keyof typeof FIREBASE_ERRORS],
-                  {
-                    id: toastId,
-                  }
+                  FIREBASE_ERRORS[err.code as keyof typeof FIREBASE_ERRORS]
                 )
               }
             })

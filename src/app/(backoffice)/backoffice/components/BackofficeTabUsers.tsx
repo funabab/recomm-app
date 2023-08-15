@@ -21,7 +21,7 @@ export default function BackofficeTabUsers() {
   const [users] = useCollectionData(
     query(
       collection(firebaseFirestore, 'users').withConverter(userConverter),
-      orderBy('createdAt', 'desc')
+      orderBy('metadata.creationTime', 'desc')
     )
   )
 
@@ -55,10 +55,15 @@ export default function BackofficeTabUsers() {
                 ref={formRef}
                 action={(formdata) =>
                   startTransition(async () => {
-                    const { message } = await inviteUserToDepartment(formdata)
-                    toast.success(message)
-                    setCreateUserDialogOpen(false)
-                    formRef.current?.reset()
+                    try {
+                      const { message } = await inviteUserToDepartment(formdata)
+                      toast.success(message)
+                      setCreateUserDialogOpen(false)
+                      formRef.current?.reset()
+                    } catch (e) {
+                      const err = e as Error
+                      toast.error(err.message)
+                    }
                   })
                 }
                 className="mt-5"
@@ -194,7 +199,7 @@ export default function BackofficeTabUsers() {
                       .join(', ')}
                   </td>
                   <td>
-                    {dayjs(user.createdAt.toDate()).format(
+                    {dayjs(user.metadata.creationTime).format(
                       'DD MMMM, YYYY HH:mm:ss'
                     )}
                   </td>

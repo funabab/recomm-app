@@ -29,15 +29,11 @@ export default async function UserInvitation({
       .get())
   const departmentData = departmentDoc && (departmentDoc.data() as Department)
 
-  // if (
-  //   !invitationDoc.exists ||
-  //   !departmentDoc.exists ||
-  //   dayjs(invitationData.expiresAt.toDate()).isBefore(dayjs())
-  // ) {
-  //   notFound()
-  // }
-
-  if (!invitationDoc.exists || !departmentDoc.exists) {
+  if (
+    !invitationDoc.exists ||
+    !departmentDoc.exists ||
+    dayjs(invitationData.expiresAt.toDate()).isBefore(dayjs())
+  ) {
     notFound()
   }
 

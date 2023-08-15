@@ -30,7 +30,7 @@ export const onBeforeAccountCreated = beforeUserCreated(async (user) => {
 
 export const onAccountCreated = functions.auth.user().onCreate((user) => {
   const firestore = getFirestore()
-  const data = { ...JSON.parse(JSON.stringify(user)), createdAt: new Date() }
+  const data = JSON.parse(JSON.stringify(user))
 
   delete data.displayName
   delete data.photoURL
@@ -39,10 +39,11 @@ export const onAccountCreated = functions.auth.user().onCreate((user) => {
 })
 
 export const onDepartmentMembersCollectionUpdated = onDocumentWritten(
-  'departmentMembers/{userId}',
+  'departmentMembers/{membershipId}',
   async (event) => {
     const firestore = getFirestore()
-    const userId = event.params.userId
+    const userId = (event.data?.after.data()?.userId ||
+      event.data?.before.data()?.userId) as string
 
     const memberships = await firestore
       .collection('departmentMembers')
@@ -119,17 +120,18 @@ export const acceptDepartmentInvitation = onCall(async (request) => {
     throw new HttpsError('not-found', 'Invitation not found')
   }
 
-  const acriveInvitationData = activeInvitationDoc.data() as Invitation
+  const activeInvitationData = activeInvitationDoc.data() as Invitation
 
   await firestore.runTransaction(async (trx) => {
     const department = await trx.get(
-      firestore.doc(`departments/${acriveInvitationData.department}`)
+      firestore.doc(`departments/${activeInvitationData.department}`)
     )
 
-    trx.create(firestore.collection('departmentMembers').doc(uid), {
+    trx.create(firestore.collection('departmentMembers').doc(), {
       userDisplayName: requestData.displayName,
       userId: uid,
-      userRole: acriveInvitationData.role,
+      userRole: activeInvitationData.role,
+      userEmail: activeInvitationData.email,
 
       departmentTitle: department.data()?.title,
       departmentId: department.id,
@@ -137,7 +139,7 @@ export const acceptDepartmentInvitation = onCall(async (request) => {
     })
 
     trx.update(
-      firestore.doc(`departments/${acriveInvitationData.department}`),
+      firestore.doc(`departments/${activeInvitationData.department}`),
       {
         membersCount: FieldValue.increment(1),
       }

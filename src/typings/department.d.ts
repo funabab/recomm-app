@@ -12,6 +12,7 @@ export interface DepartmentMembership {
   userDisplayName: string
   userId: string
   userRole: string
+  userEmail: string
 
   departmentTitle: string
   departmentId: string

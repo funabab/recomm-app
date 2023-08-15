@@ -17,5 +17,4 @@ export interface User extends FirebaseUser {
     departmentId: string
     role: UserRole
   }[]
-  createdAt: Timestamp
 }
