@@ -3,7 +3,7 @@
 import { useRef, useState, useTransition } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { RxCross2 } from 'react-icons/rx'
-import { inviteUserToDepartment } from '@/app/actions/department'
+import { inviteUserToDepartment } from '@/app/(chat)/chat/[channelId]/actions/department'
 import { toast } from 'react-hot-toast'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { collection, orderBy, query } from 'firebase/firestore'

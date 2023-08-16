@@ -6,9 +6,7 @@ export default function IconChat(props: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      xmlSpace="preserve"
-      width={334.873}
-      height={313.545}
+      viewBox="0 0 334.873 313.545"
       {...props}
     >
       <defs>

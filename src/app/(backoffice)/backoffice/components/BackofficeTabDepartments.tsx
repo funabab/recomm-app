@@ -12,7 +12,7 @@ import { useState, useTransition } from 'react'
 import { Department } from '@/typings'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import BackofficeEditDepartmentModal from './BackofficeEditDepartmentModal'
-import { deleteDepartment } from '@/app/actions/department'
+import { deleteDepartment } from '@/app/(chat)/chat/[channelId]/actions/department'
 import { toast } from 'react-hot-toast'
 
 export default function BackofficeTabDepartments() {

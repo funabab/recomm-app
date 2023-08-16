@@ -11,20 +11,20 @@ export default function ChannelListAccordion(props: Props) {
     <Accordion.Root {...props} defaultValue="channels" type="single">
       <Accordion.Item value="channels">
         <Accordion.Header>
-          <Accordion.Trigger className="btn btn-ghost w-full rounded-none justify-start group text-[15px] font-lato font-bold text-primary">
+          <Accordion.Trigger className="btn btn-ghost w-full rounded-none justify-start group text-[15px] font-lato font-bold text-primary no-animation">
             <AiFillCaretDown className="transition-transform duration-300 transform-gpu group-data-[state=closed]:-rotate-180" />
             Channels
           </Accordion.Trigger>
         </Accordion.Header>
         <Accordion.Content>
           <Link
-            href="#"
-            className="btn btn-ghost font-lato w-full rounded-none justify-start pl-6 text-sm min-h-0 h-10 text-neutral"
+            href="/chat/1234/1234"
+            className="btn btn-ghost font-lato w-full rounded-none justify-start pl-6 text-sm min-h-0 h-10 text-neutral no-animation"
           >
             <BiHash />
             Channel
           </Link>
-          <button className="btn btn-ghost font-lato w-full rounded-none justify-start pl-6 text-sm min-h-0 h-10 text-primary/80">
+          <button className="btn btn-ghost font-lato w-full rounded-none justify-start pl-6 text-sm min-h-0 h-10 text-primary/80 no-animation">
             <AiFillPlusSquare className="text-2xl" />
             Add Channel
           </button>

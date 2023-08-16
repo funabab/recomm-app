@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useTransition } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { editDepartment } from '@/app/actions/department'
+import { editDepartment } from '@/app/(chat)/chat/[channelId]/actions/department'
 import { toast } from 'react-hot-toast'
 import { RxCross2 } from 'react-icons/rx'
 import { Department } from '@/typings'
