@@ -1,5 +1,6 @@
 import admin from 'firebase-admin'
 import { initializeApp, getApps, getApp } from 'firebase-admin/app'
+import { getAuth } from 'firebase-admin/auth'
 import { getFirestore } from 'firebase-admin/firestore'
 
 export const firebaseAdmin =
@@ -11,4 +12,5 @@ export const firebaseAdmin =
       })
     : getApp()
 
+export const firebaseAdminAuth = getAuth(firebaseAdmin)
 export const firebaseAdminFirestore = getFirestore(firebaseAdmin)

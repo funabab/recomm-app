@@ -1,6 +1,6 @@
 'use server'
 
-import { firebaseAdminFirestore } from '@/firebase/admin'
+import { firebaseAdminAuth, firebaseAdminFirestore } from '@/firebase/admin'
 import { FieldValue, Timestamp } from 'firebase-admin/firestore'
 import { resend, resendSender } from '@/utils/email'
 import dayjs from 'dayjs'
@@ -107,5 +107,38 @@ export const deleteUserInvitation = async (invitationId: string) => {
   await firebaseAdminFirestore.doc(`invitations/${invitationId}`).delete()
   return {
     message: 'Invitation deleted successfully',
+  }
+}
+
+export const createDepartmentChannel = async (
+  formdata: FormData,
+  token: string
+) => {
+  const title = formdata.get('title') as string
+  const description = formdata.get('description') as string
+  const department = formdata.get('department') as string
+
+  const decodedToken = await firebaseAdminAuth.verifyIdToken(token)
+
+  const channelDoc = await firebaseAdminFirestore
+    .collection('departmentChannels')
+    .add({
+      title,
+      description,
+      departmentId: department,
+      createdBy: decodedToken.uid,
+      createdAt: FieldValue.serverTimestamp(),
+    })
+
+  await firebaseAdminFirestore.collection('departmentChannelMembers').add({
+    departmentId: department,
+    userId: decodedToken.uid,
+    channelTitle: title,
+    channelId: channelDoc.id,
+    createdAt: FieldValue.serverTimestamp(),
+  })
+
+  return {
+    message: 'Channel created successfully',
   }
 }

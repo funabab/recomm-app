@@ -7,6 +7,7 @@ import { fontLato } from '@/utils/fonts'
 import AuthProtect from '../components/AuthProtect'
 import UserAvatar from './components/UserAvatar'
 import DepartmentSidebarMenu from './components/DepartmentSidebarMenu'
+import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
   title: 'Recomm - Department Communication',
@@ -68,6 +69,7 @@ export default function AppRootLayout({ children, navigation }: Props) {
               </div>
             </div>
           </main>
+          <Toaster />
         </body>
       </html>
     </AuthProtect>
