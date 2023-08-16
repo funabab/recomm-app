@@ -1,6 +1,7 @@
 'use client'
 
 import { useUser } from '@/app/components/AuthProtect'
+import { initialFromTitleText } from '@/utils/commons'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -27,7 +28,7 @@ export default function DepartmentSidebarMenu() {
                   )}
                 >
                   <span className="font-lato text-[17px] font-bold text-neutral-content uppercase">
-                    {membership.departmentTitle[0]}
+                    {initialFromTitleText(membership.departmentTitle)}
                   </span>
                 </div>
               </div>
