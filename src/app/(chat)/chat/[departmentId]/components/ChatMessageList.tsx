@@ -1,3 +1,5 @@
+'use client'
+
 import {
   AiOutlineMessage,
   AiOutlineStar,
@@ -5,14 +7,31 @@ import {
 } from 'react-icons/ai'
 import ChannelChatMessageInput from '@/app/(chat)/components/ChannelChatMessageInput'
 import ChannelChatMessage from '@/app/(chat)/components/ChannelChatMessage'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import { doc } from 'firebase/firestore'
+import { firebaseFirestore } from '@/firebase/client'
+import { useParams } from 'next/navigation'
+import { departmentChannelConverter } from '@/firebase/converters'
+import { LoaderScreen } from '@/app/components/Loader'
 
 export default function ChatMessageList() {
+  const { channelId } = useParams()
+  const [channel, isLoadingChannel] = useDocumentData(
+    doc(firebaseFirestore, 'departmentChannels', channelId).withConverter(
+      departmentChannelConverter
+    )
+  )
+
+  if (isLoadingChannel) {
+    return <LoaderScreen />
+  }
+
   return (
     <div className="w-full h-full flex flex-col">
       <header className="pt-[13px] pb-[3px] px-[22px] border-b border-b-neutral-content flex flex-row items-center justify-between">
         <div>
           <div className="flex flex-row gap-x-1 items-center">
-            <strong className="font-lato text-[15px]"># uxui_design</strong>
+            <strong className="font-lato text-[15px]">{channel?.title}</strong>
             <button className="text-xs">
               <AiOutlineStar />
             </button>
@@ -23,8 +42,7 @@ export default function ChatMessageList() {
               13
             </span>
             <span className="px-2 truncate max-w-[10rem] lg:max-w-2xl">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas,
-              voluptatum!
+              {channel?.description}
             </span>
           </p>
         </div>

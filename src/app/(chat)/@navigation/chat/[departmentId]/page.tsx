@@ -18,11 +18,11 @@ export default function DepartmentNavigation() {
       </div>
 
       <div>
-        <button className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary">
+        <button className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary no-animation">
           <AiOutlineComment />
           Notice Board
         </button>
-        <button className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary">
+        <button className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary no-animation">
           <AiOutlineFile />
           Resources
         </button>

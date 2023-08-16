@@ -9,16 +9,14 @@ import { useDocumentData } from 'react-firebase-hooks/firestore'
 import { doc } from 'firebase/firestore'
 import { departmentConverter } from '@/firebase/converters'
 import { initialFromTitleText } from '@/utils/commons'
+import { useEffect, useMemo, useState } from 'react'
+import { Department } from '@/typings'
+import { useDepartmentValues } from './DepertmentProvider'
 
 export default function ChannelButton() {
   const { departmentId } = useParams()
-  const [department, isLoading] = useDocumentData(
-    departmentId
-      ? doc(firebaseFirestore, 'departments', departmentId).withConverter(
-          departmentConverter
-        )
-      : null
-  )
+  const { currentDepartment } = useDepartmentValues()
+
   const [signOut] = useSignOut(firebaseAuth)
 
   return (
@@ -26,9 +24,9 @@ export default function ChannelButton() {
       <DropdownMenu.Trigger asChild>
         <button
           className="btn btn-ghost btn-sm font-lato text-left text-primary outline-none"
-          disabled={isLoading}
+          disabled={!currentDepartment}
         >
-          {department?.title}
+          {currentDepartment?.title}
           <RxCaretDown />
         </button>
       </DropdownMenu.Trigger>
@@ -46,13 +44,13 @@ export default function ChannelButton() {
               <div className="avatar placeholder">
                 <div className="w-9 h-9 bg-neutral rounded">
                   <span className="text-neutral-content">
-                    {initialFromTitleText(department?.title)}
+                    {initialFromTitleText(currentDepartment?.title)}
                   </span>
                 </div>
               </div>
               <div>
                 <p className="text-xs">ICT</p>
-                <p className="text-[10px]">{department?.description}</p>
+                <p className="text-[10px]">{currentDepartment?.description}</p>
               </div>
             </div>
           </DropdownMenu.Item>

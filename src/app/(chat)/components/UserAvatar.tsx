@@ -10,14 +10,14 @@ export default function UserAvatar() {
   const { departmentId, channelId, userId } = useParams()
 
   const profileUrl = useMemo(() => {
-    if (channelId && userId) {
-      return `/chat/${departmentId}/${channelId}/profile/${userId}`
+    if (departmentId && channelId) {
+      return `/chat/${departmentId}/${channelId}/profile/${user?.uid}`
     } else if (departmentId) {
       return `/chat/${departmentId}/profile/${user?.uid}`
     } else {
       return `/chat/profile/${user?.uid}`
     }
-  }, [departmentId, channelId, user, userId])
+  }, [departmentId, channelId, user])
 
   return (
     <Link href={profileUrl} className="ml-auto" prefetch>

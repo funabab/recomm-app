@@ -15,6 +15,7 @@ import { firebaseAuth, firebaseFirestore } from '@/firebase/client'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { and, collection, query, where } from 'firebase/firestore'
 import { departmentChannelMemberConverter } from '@/firebase/converters'
+import { useDepartmentValues } from './DepertmentProvider'
 
 interface Props extends Omit<Accordion.AccordionSingleProps, 'type'> {}
 
@@ -24,17 +25,7 @@ export default function ChannelListAccordion(props: Props) {
   const formRef = useRef<HTMLFormElement>(null)
   const [showCreateChannelDialog, setShowCreateChannelDialog] = useState(false)
   const [user] = useAuthState(firebaseAuth)
-  const [channelMembership] = useCollectionData(
-    departmentId && user?.uid
-      ? query(
-          collection(firebaseFirestore, 'departmentChannelMembers'),
-          and(
-            where('departmentId', '==', departmentId),
-            where('userId', '==', user?.uid)
-          )
-        ).withConverter(departmentChannelMemberConverter)
-      : null
-  )
+  const { currentChannelMembership } = useDepartmentValues()
 
   return (
     <React.Fragment>
@@ -47,7 +38,7 @@ export default function ChannelListAccordion(props: Props) {
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Content>
-            {channelMembership?.map((membership) => (
+            {currentChannelMembership?.map((membership) => (
               <Link
                 key={membership.id}
                 href={`/chat/${membership.departmentId}/${membership.channelId}`}
