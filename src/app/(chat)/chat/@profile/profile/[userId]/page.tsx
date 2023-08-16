@@ -10,9 +10,11 @@ import { doc } from 'firebase/firestore'
 import { useParams, useRouter } from 'next/navigation'
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore'
 import { RxCross2 } from 'react-icons/rx'
+import { USER_ROLES } from '@/utils/constants'
+import { UserRole } from '@/typings'
 
 export default function UserProfile() {
-  const { userId } = useParams()
+  const { userId, departmentId } = useParams()
   const [user, isLoading] = useDocumentDataOnce(
     userId
       ? doc(firebaseFirestore, 'users', userId).withConverter(userConverter)
@@ -52,7 +54,17 @@ export default function UserProfile() {
               </div>
 
               <strong className="text-2xl mt-5">{user?.displayName}</strong>
-              <p>Adminstrator 👷🏾‍♂️</p>
+              {departmentId && user?.memberships && (
+                <p>
+                  {
+                    USER_ROLES[
+                      user.memberships.find(
+                        (member) => member.departmentId === departmentId
+                      )?.role as UserRole
+                    ]
+                  }
+                </p>
+              )}
             </div>
           </div>
         </React.Fragment>
