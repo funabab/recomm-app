@@ -25,14 +25,10 @@ export default function AuthRedirect({ redirectTo, children }: Props) {
   const router = useRouter()
 
   useEffect(() => {
-    if (userSnapshot && !userSnapshot.exists) {
+    if (firebaseUser && userSnapshot && userSnapshot.exists()) {
       router.replace(redirectTo)
     }
-  }, [userSnapshot, router, redirectTo])
-
-  if (!userSnapshot?.exists) {
-    return null
-  }
+  }, [userSnapshot, router, firebaseUser, redirectTo])
 
   return children
 }

@@ -1,8 +1,8 @@
 import { useRef, useState, useTransition } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { createDepartment } from '@/app/(chat)/chat/[channelId]/actions/department'
 import { toast } from 'react-hot-toast'
 import { RxCross2 } from 'react-icons/rx'
+import { createDepartment } from '@/app/actions/department'
 
 interface Props extends Dialog.DialogProps {
   dialogTrigger?: React.ReactNode

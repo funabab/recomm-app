@@ -12,8 +12,8 @@ import { useState, useTransition } from 'react'
 import { Department } from '@/typings'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import BackofficeEditDepartmentModal from './BackofficeEditDepartmentModal'
-import { deleteDepartment } from '@/app/(chat)/chat/[channelId]/actions/department'
 import { toast } from 'react-hot-toast'
+import { deleteDepartment } from '@/app/actions/department'
 
 export default function BackofficeTabDepartments() {
   const [departments, isLoading] = useCollectionData(

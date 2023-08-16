@@ -9,7 +9,7 @@ import Loader from '@/app/components/Loader'
 import { useTransition } from 'react'
 import { BsTrash } from 'react-icons/bs'
 import { toast } from 'react-hot-toast'
-import { deleteUserInvitation } from '@/app/(chat)/chat/[channelId]/actions/department'
+import { deleteUserInvitation } from '@/app/actions/department'
 
 export default function BackofficeTabInvitations() {
   const [invitations, isLoading] = useCollectionData(

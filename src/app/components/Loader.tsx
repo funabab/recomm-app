@@ -17,7 +17,7 @@ export default function Loader() {
 
 export function LoaderScreen() {
   return (
-    <div className="bg-base-100 w-full h-full fixed inset-0 flex justify-center items-center">
+    <div className="bg-base-100 w-full h-full absolute inset-0 flex justify-center items-center">
       <Loader />
     </div>
   )

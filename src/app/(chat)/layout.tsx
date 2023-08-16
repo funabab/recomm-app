@@ -6,6 +6,7 @@ import clsx from 'clsx'
 import { fontLato } from '@/utils/fonts'
 import AuthProtect from '../components/AuthProtect'
 import UserAvatar from './components/UserAvatar'
+import DepartmentSidebarMenu from './components/DepartmentSidebarMenu'
 
 export const metadata: Metadata = {
   title: 'Recomm - Department Communication',
@@ -61,35 +62,7 @@ export default function AppRootLayout({ children, navigation }: Props) {
                   className="drawer-overlay"
                 ></label>
                 <div className="menu h-full bg-base-200 text-base-content px-0 py-0 flex flex-row">
-                  <div className="py-[21px] px-[14px] border-r border-neutral-content">
-                    <div className="space-y-[14px]">
-                      <div>
-                        <div
-                          className="avatar placeholder cursor-pointer"
-                          title="Library and Information Science Department"
-                        >
-                          <div className="w-8 h-8 bg-neutral rounded-[5px]">
-                            <span className="font-lato text-[17px] font-bold text-neutral-content">
-                              L
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <div
-                          className="avatar placeholder cursor-pointer"
-                          title="Computer Science Department"
-                        >
-                          <div className="w-8 h-8 bg-neutral rounded-[5px] outline-neutral-focus outline outline-[3px] outline-offset-[2px]">
-                            <span className="font-lato text-[17px] font-bold text-neutral-content">
-                              C
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <DepartmentSidebarMenu />
                   {navigation}
                 </div>
               </div>

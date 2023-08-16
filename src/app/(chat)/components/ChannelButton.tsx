@@ -2,8 +2,12 @@
 
 import { RxCaretDown } from 'react-icons/rx'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { useSignOut } from 'react-firebase-hooks/auth'
+import { firebaseAuth } from '@/firebase/client'
 
 export default function ChannelButton() {
+  const [signOut] = useSignOut(firebaseAuth)
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -38,7 +42,10 @@ export default function ChannelButton() {
           </DropdownMenu.Item>
           <DropdownMenu.Separator className="h-[1px] bg-neutral-content mt-5" />
           <DropdownMenu.Item className="outline-none">
-            <button className="btn btn-ghost btn-block btn-sm text-xs rounded-none justify-start no-animation">
+            <button
+              className="btn btn-ghost btn-block btn-sm text-xs rounded-none justify-start no-animation"
+              onClick={() => signOut()}
+            >
               Logout
             </button>
           </DropdownMenu.Item>

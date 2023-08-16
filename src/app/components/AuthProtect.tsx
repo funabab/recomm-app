@@ -19,7 +19,7 @@ type AuthContextValue = { user: User | undefined }
 export const AuthContext = createContext<AuthContextValue | null>(null)
 
 export default function AuthProtect({ children, redirectTo = '/' }: Props) {
-  const [firebaseUser] = useAuthState(firebaseAuth)
+  const [firebaseUser, isLoadingFirebaseUser] = useAuthState(firebaseAuth)
   const [user, _isLoadingUser, _error, userSnapshot] = useDocumentData(
     firebaseUser
       ? doc(firebaseFirestore, 'users', firebaseUser.uid).withConverter(
@@ -30,10 +30,13 @@ export default function AuthProtect({ children, redirectTo = '/' }: Props) {
   const router = useRouter()
 
   useEffect(() => {
-    if (userSnapshot && !userSnapshot.exists) {
+    if (
+      (!isLoadingFirebaseUser && firebaseUser === null) ||
+      (userSnapshot && !userSnapshot.exists())
+    ) {
       router.replace(redirectTo)
     }
-  }, [userSnapshot, router, redirectTo])
+  }, [userSnapshot, firebaseUser, isLoadingFirebaseUser, router, redirectTo])
 
   return (
     <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>

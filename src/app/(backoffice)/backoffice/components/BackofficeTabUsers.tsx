@@ -3,7 +3,6 @@
 import { useRef, useState, useTransition } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { RxCross2 } from 'react-icons/rx'
-import { inviteUserToDepartment } from '@/app/(chat)/chat/[channelId]/actions/department'
 import { toast } from 'react-hot-toast'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { collection, orderBy, query } from 'firebase/firestore'
@@ -12,6 +11,7 @@ import { departmentConverter, userConverter } from '@/firebase/converters'
 import Loader from '@/app/components/Loader'
 import { USER_ROLES } from '@/utils/constants'
 import dayjs from 'dayjs'
+import { inviteUserToDepartment } from '@/app/actions/department'
 
 export default function BackofficeTabUsers() {
   const [createUserDialogOpen, setCreateUserDialogOpen] = useState(false)
