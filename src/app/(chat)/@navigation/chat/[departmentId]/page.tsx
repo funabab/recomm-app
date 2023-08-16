@@ -6,10 +6,10 @@ import ChannelListAccordion from '../../../components/ChannelListAccordion'
 export default function DepartmentNavigation() {
   return (
     <div className="w-[262px]">
-      <div className="py-2 px-3 border-b border-neutral-content flex justify-between items-center">
+      <div className="py-2 px-3 border-b border-neutral-content flex justify-between items-center max-w-full">
         <ChannelButton />
 
-        <button className="btn btn-circle btn-accent text-xl text-primary">
+        <button className="btn btn-circle btn-accent text-xl text-primary shrink-0">
           <LiaEdit />
         </button>
       </div>

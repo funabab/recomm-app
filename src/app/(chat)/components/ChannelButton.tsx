@@ -3,16 +3,32 @@
 import { RxCaretDown } from 'react-icons/rx'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { useSignOut } from 'react-firebase-hooks/auth'
-import { firebaseAuth } from '@/firebase/client'
+import { firebaseAuth, firebaseFirestore } from '@/firebase/client'
+import { useParams } from 'next/navigation'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import { doc } from 'firebase/firestore'
+import { departmentConverter } from '@/firebase/converters'
+import { initialFromTitleText } from '@/utils/commons'
 
 export default function ChannelButton() {
+  const { departmentId } = useParams()
+  const [department, isLoading] = useDocumentData(
+    departmentId
+      ? doc(firebaseFirestore, 'departments', departmentId).withConverter(
+          departmentConverter
+        )
+      : null
+  )
   const [signOut] = useSignOut(firebaseAuth)
 
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="btn btn-ghost text-[15px] font-lato text-primary outline-none">
-          Channel
+        <button
+          className="btn btn-ghost btn-sm font-lato text-left text-primary outline-none"
+          disabled={isLoading}
+        >
+          {department?.title}
           <RxCaretDown />
         </button>
       </DropdownMenu.Trigger>
@@ -29,14 +45,14 @@ export default function ChannelButton() {
             <div className="flex px-5 gap-x-2 items-center font-lato">
               <div className="avatar placeholder">
                 <div className="w-9 h-9 bg-neutral rounded">
-                  <span className="text-neutral-content">I</span>
+                  <span className="text-neutral-content">
+                    {initialFromTitleText(department?.title)}
+                  </span>
                 </div>
               </div>
               <div>
                 <p className="text-xs">ICT</p>
-                <p className="text-[10px]">
-                  Information and Communication Technology
-                </p>
+                <p className="text-[10px]">{department?.description}</p>
               </div>
             </div>
           </DropdownMenu.Item>
