@@ -1,10 +1,19 @@
-import { LiaEdit } from 'react-icons/lia'
-import ChannelButton from '../../../components/ChannelButton'
-import { AiOutlineComment, AiOutlineFile } from 'react-icons/ai'
-import ChannelListAccordion from '../../../components/ChannelListAccordion'
-import DepartmentRoleVisible from '@/app/components/DepartmentRoleVisible'
+'use client'
 
-export default function DepartmentNavigation() {
+import DepartmentRoleVisible from '@/app/components/DepartmentRoleVisible'
+import ChannelButton from './ChannelButton'
+import { LiaEdit } from 'react-icons/lia'
+import { AiOutlineComment, AiOutlineFile } from 'react-icons/ai'
+import ChannelListAccordion from './ChannelListAccordion'
+import { useParams } from 'next/navigation'
+
+export default function NavigationSider() {
+  const { departmentId } = useParams()
+
+  if (!departmentId) {
+    return null
+  }
+
   return (
     <div className="w-[262px]">
       <div className="py-2 px-3 border-b border-neutral-content flex justify-between items-center max-w-full">

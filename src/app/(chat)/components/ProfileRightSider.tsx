@@ -1,27 +1,31 @@
 'use client'
 
 import React from 'react'
-import { useUser } from '@/app/components/AuthProtect'
 import Loader from '@/app/components/Loader'
 import { firebaseFirestore } from '@/firebase/client'
-import { userConverter } from '@/firebase/converters'
-import { initialFromTitleText } from '@/utils/commons'
 import { doc } from 'firebase/firestore'
-import { useParams, useRouter } from 'next/navigation'
-import { useDocumentDataOnce } from 'react-firebase-hooks/firestore'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import { initialFromTitleText } from '@/utils/commons'
 import { RxCross2 } from 'react-icons/rx'
 import { USER_ROLES } from '@/utils/constants'
 import { UserRole } from '@/typings'
+import { userConverter } from '@/firebase/converters'
 
-export default function UserProfile() {
-  const { userId, departmentId } = useParams()
-  const [user, isLoading] = useDocumentDataOnce(
+export default function ProfileRightSider() {
+  const searchParams = useSearchParams()
+  const { departmentId } = useParams()
+  const userId = searchParams.get('user')
+  const [user, isLoading] = useDocumentData(
     userId
       ? doc(firebaseFirestore, 'users', userId).withConverter(userConverter)
       : null
   )
-
   const router = useRouter()
+
+  if (!userId) {
+    return null
+  }
 
   return (
     <div className="border-l border-l-neutral-content h-full w-full absolute top-0 left-0 lg:static lg:w-96 bg-base-100">

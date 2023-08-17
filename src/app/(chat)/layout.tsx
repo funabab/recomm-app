@@ -9,6 +9,7 @@ import UserAvatar from './components/UserAvatar'
 import DepartmentSidebarMenu from './components/DepartmentSidebarMenu'
 import { Toaster } from 'react-hot-toast'
 import DepartmentProvider from './components/DepertmentProvider'
+import NavigationSider from './components/NavigationSider'
 
 export const metadata: Metadata = {
   title: 'Recomm - Department Communication',
@@ -16,10 +17,9 @@ export const metadata: Metadata = {
 
 interface Props {
   children: React.ReactNode
-  navigation: React.ReactNode
 }
 
-export default function AppRootLayout({ children, navigation }: Props) {
+export default function AppRootLayout({ children }: Props) {
   return (
     <AuthProtect>
       <DepartmentProvider>
@@ -66,7 +66,7 @@ export default function AppRootLayout({ children, navigation }: Props) {
                   ></label>
                   <div className="menu h-full bg-base-200 text-base-content px-0 py-0 flex flex-row">
                     <DepartmentSidebarMenu />
-                    {navigation}
+                    <NavigationSider />
                   </div>
                 </div>
               </div>

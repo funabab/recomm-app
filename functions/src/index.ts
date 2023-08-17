@@ -45,6 +45,17 @@ export const onDepartmentMembersCollectionUpdated = onDocumentWritten(
     const userId = (event.data?.after.data()?.userId ||
       event.data?.before.data()?.userId) as string
 
+    if (event.data?.before === undefined || event.data.after === undefined) {
+      const departmentId = (event.data?.before.data()?.departmentId ||
+        event.data?.after.data()?.departmentId) as string
+
+      await firestore.doc(`departments/${departmentId}`).update({
+        membersCount: event.data?.after
+          ? FieldValue.increment(1)
+          : FieldValue.increment(-1),
+      })
+    }
+
     const memberships = await firestore
       .collection('departmentMembers')
       .where('userId', '==', userId)
@@ -65,6 +76,24 @@ export const onDepartmentMembersCollectionUpdated = onDocumentWritten(
         merge: true,
       }
     )
+  }
+)
+
+export const onDepartmentChannelMembersCollectionUpdated = onDocumentWritten(
+  'departmentChannelMembers/{membershipId}',
+  async (event) => {
+    const firestore = getFirestore()
+
+    if (!event.data?.before === undefined || event.data?.after === undefined) {
+      const channeld = (event.data?.before.data()?.channeld ||
+        event.data?.after.data()?.channeld) as string
+
+      await firestore.doc(`departmentChannels/${channeld}`).update({
+        membersCount: event.data?.after
+          ? FieldValue.increment(1)
+          : FieldValue.increment(-1),
+      })
+    }
   }
 )
 
@@ -137,13 +166,6 @@ export const acceptDepartmentInvitation = onCall(async (request) => {
       departmentId: department.id,
       createdAt: new Date(),
     })
-
-    trx.update(
-      firestore.doc(`departments/${activeInvitationData.department}`),
-      {
-        membersCount: FieldValue.increment(1),
-      }
-    )
 
     trx.delete(activeInvitationDoc.ref)
   })
