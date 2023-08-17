@@ -5,7 +5,7 @@ import { FieldValue, Timestamp } from 'firebase-admin/firestore'
 import { resend, resendSender } from '@/utils/email'
 import dayjs from 'dayjs'
 import { USER_ROLES } from '@/utils/constants'
-import { Department, UserRole } from '@/typings'
+import { Department, Invitation, UserRole } from '@/typings'
 
 export const createDepartment = async (formdata: FormData) => {
   const title = formdata.get('title') as string
@@ -143,5 +143,65 @@ export const createDepartmentChannel = async (
 
   return {
     message: 'Channel created successfully',
+  }
+}
+
+export const acceptDepartmentInvitation = async (
+  body: { id: string; email: string | null; displayName: string | null },
+  tokenId: string
+) => {
+  const decodedToken = await firebaseAdminAuth.verifyIdToken(tokenId)
+  const uid = decodedToken.uid
+
+  if (!uid) {
+    throw new Error('You must be logged in')
+  }
+
+  if (!body) {
+    throw new Error('Invalid invitation id')
+  }
+
+  const invitations = await firebaseAdminFirestore
+    .collection(`invitations`)
+    .where('email', '==', body.email)
+    .get()
+
+  const activeInvitationDoc = invitations.docs.find((invitationDoc) => {
+    const invitationData = invitationDoc.data() as Invitation
+    return (
+      invitationDoc.id === body.id &&
+      dayjs(invitationData.expiresAt.toDate()).isAfter(dayjs())
+    )
+  })
+
+  if (!activeInvitationDoc) {
+    throw new Error('Invitation not found')
+  }
+
+  const activeInvitationData = activeInvitationDoc.data() as Invitation
+
+  await firebaseAdminFirestore.runTransaction(async (trx) => {
+    const department = await trx.get(
+      firebaseAdminFirestore.doc(
+        `departments/${activeInvitationData.department}`
+      )
+    )
+
+    trx.create(firebaseAdminFirestore.collection('departmentMembers').doc(), {
+      userDisplayName: body.displayName,
+      userId: uid,
+      userRole: activeInvitationData.role,
+      userEmail: activeInvitationData.email,
+
+      departmentTitle: department.data()?.title,
+      departmentId: department.id,
+      createdAt: new Date(),
+    })
+
+    trx.delete(activeInvitationDoc.ref)
+  })
+
+  return {
+    message: 'Invitation accepted successfully',
   }
 }

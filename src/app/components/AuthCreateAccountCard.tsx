@@ -59,6 +59,11 @@ export default function AuthCreateAccountCard({
                   toast.success('Account created successfully')
                   onUserLoggedIn?.({
                     ...userCredential!.user,
+                    getIdToken() {
+                      return Promise.resolve(
+                        (userCredential!.user as any).accessToken
+                      )
+                    },
                     displayName: fullname,
                   })
                 }

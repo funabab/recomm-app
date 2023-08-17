@@ -1,8 +1,6 @@
 import { FieldValue, getFirestore } from 'firebase-admin/firestore'
 import { onDocumentWritten } from 'firebase-functions/v2/firestore'
-import { DepartmentMembership, Invitation } from '../../src/typings'
-import { HttpsError, onCall } from 'firebase-functions/v2/https'
-import dayjs = require('dayjs')
+import { DepartmentMembership } from '../../src/typings'
 
 export const onDepartmentMembersCollectionUpdated = onDocumentWritten(
   'departmentMembers/{membershipId}',
@@ -67,61 +65,3 @@ export const onDepartmentChannelMembersCollectionUpdated = onDocumentWritten(
     }
   }
 )
-
-export const acceptDepartmentInvitation = onCall(async (request) => {
-  const uid = request.auth?.uid
-  const requestData = request.data as
-    | { id: string; email: string; displayName: string }
-    | undefined
-
-  if (!uid) {
-    throw new HttpsError('unauthenticated', 'You must be logged in')
-  }
-
-  if (!requestData) {
-    throw new HttpsError('invalid-argument', 'Invalid invitation id')
-  }
-
-  const firestore = getFirestore()
-  const invitations = await firestore
-    .collection(`invitations`)
-    .where('email', '==', requestData.email)
-    .get()
-
-  const activeInvitationDoc = invitations.docs.find((invitationDoc) => {
-    const invitationData = invitationDoc.data() as Invitation
-    return (
-      invitationDoc.id === requestData.id &&
-      dayjs(invitationData.expiresAt.toDate()).isAfter(dayjs())
-    )
-  })
-
-  if (!activeInvitationDoc) {
-    throw new HttpsError('not-found', 'Invitation not found')
-  }
-
-  const activeInvitationData = activeInvitationDoc.data() as Invitation
-
-  await firestore.runTransaction(async (trx) => {
-    const department = await trx.get(
-      firestore.doc(`departments/${activeInvitationData.department}`)
-    )
-
-    trx.create(firestore.collection('departmentMembers').doc(), {
-      userDisplayName: requestData.displayName,
-      userId: uid,
-      userRole: activeInvitationData.role,
-      userEmail: activeInvitationData.email,
-
-      departmentTitle: department.data()?.title,
-      departmentId: department.id,
-      createdAt: new Date(),
-    })
-
-    trx.delete(activeInvitationDoc.ref)
-  })
-
-  return {
-    message: 'Invitation accepted successfully',
-  }
-})

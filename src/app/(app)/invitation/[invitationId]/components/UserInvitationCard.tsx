@@ -1,14 +1,14 @@
 'use client'
 
+import { acceptDepartmentInvitation } from '@/app/actions/department'
 import AuthModal from '@/app/components/AuthModal'
-import { firebaseAuth, firebaseFunctions } from '@/firebase/client'
+import { firebaseAuth } from '@/firebase/client'
 import { Department, Invitation } from '@/typings'
 import { USER_ROLES } from '@/utils/constants'
 import { User } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { useHttpsCallable } from 'react-firebase-hooks/functions'
 import { toast } from 'react-hot-toast'
 
 interface Props {
@@ -22,39 +22,34 @@ export default function UserInvitationCard({ department, invitation }: Props) {
   const [invitationState, setInvitationState] = useState<
     'unaccepted' | 'processing' | 'accepted'
   >('unaccepted')
-  const [acceptDepartmentInvitation] = useHttpsCallable(
-    firebaseFunctions,
-    'acceptDepartmentInvitation'
-  )
   const router = useRouter()
 
   const handleUserLoggedIn = useCallback(
-    (user: User) => {
+    async (authUser: User) => {
       setInvitationState('processing')
+      const token = await authUser.getIdToken()
       const toastId = toast.loading('Accepting invitation...')
-      acceptDepartmentInvitation({
-        id: invitation.id,
-        displayName: user.displayName,
-        email: user.email,
-      })
-        .then((result) => {
-          const data = result?.data as { message: string } | undefined
 
-          if (data) {
-            toast.success(data.message, { id: toastId })
-            setInvitationState('accepted')
-            router.replace('/chat')
-          } else {
-            throw new Error("Something wen't wrong")
-          }
-        })
-        .catch((e) => {
-          const err = e as Error
-          toast.error(err.message || "Something wen't wrong", { id: toastId })
-          setInvitationState('unaccepted')
-        })
+      try {
+        const { message } = await acceptDepartmentInvitation(
+          {
+            id: invitation.id,
+            displayName: authUser.displayName,
+            email: authUser.email,
+          },
+          token
+        )
+
+        toast.success(message, { id: toastId })
+        setInvitationState('accepted')
+        router.replace('/chat')
+      } catch (e) {
+        const err = e as Error
+        toast.error(err.message || "Something wen't wrong", { id: toastId })
+        setInvitationState('unaccepted')
+      }
     },
-    [acceptDepartmentInvitation, invitation.id, router]
+    [invitation.id, router]
   )
 
   const handleAcceptInvitation = useCallback(() => {
