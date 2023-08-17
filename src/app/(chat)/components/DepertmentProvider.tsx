@@ -11,7 +11,7 @@ import {
   DepartmentChannel,
   DepartmentChannelMembership,
 } from '@/typings'
-import { collection, doc, query, where } from 'firebase/firestore'
+import { and, collection, doc, or, query, where } from 'firebase/firestore'
 import { useParams } from 'next/navigation'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import {
@@ -55,8 +55,13 @@ export default function DepartmentProvider({ children }: Props) {
     departmentId && user?.uid
       ? query(
           collection(firebaseFirestore, 'departmentChannelMembers'),
-          where('departmentId', '==', departmentId),
-          where('userId', '==', user.uid)
+          or(
+            where('channelType', '==', 'public'),
+            and(
+              where('departmentId', '==', departmentId),
+              where('userId', '==', user.uid)
+            )
+          )
         ).withConverter(departmentChannelMemberConverter)
       : null
   )

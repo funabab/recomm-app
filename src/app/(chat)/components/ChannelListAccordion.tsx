@@ -123,6 +123,16 @@ export default function ChannelListAccordion(props: Props) {
                       required
                     />
                   </div>
+
+                  <div className="form-control w-full">
+                    <label htmlFor="channelType" className="label font-lato">
+                      <span className="label-text">Channel Type</span>
+                    </label>
+                    <select id="channelType" name="type" className="select">
+                      <option value="public">Public</option>
+                      <option value="private">Private</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div className="flex justify-end mt-6">

@@ -10,6 +10,7 @@ export interface Department {
 export interface DepartmentChannel {
   id: string
   title: string
+  membersCount?: number
   description: string
   departmentId: string
   createdBy: string

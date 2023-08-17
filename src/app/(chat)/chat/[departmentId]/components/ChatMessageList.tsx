@@ -13,6 +13,8 @@ import { firebaseFirestore } from '@/firebase/client'
 import { useParams } from 'next/navigation'
 import { departmentChannelConverter } from '@/firebase/converters'
 import { LoaderScreen } from '@/app/components/Loader'
+import pluralize from 'pluralize'
+import { num } from '@/utils/commons'
 
 export default function ChatMessageList() {
   const { channelId } = useParams()
@@ -47,7 +49,10 @@ export default function ChatMessageList() {
           </p>
         </div>
         <div className="flex flex-row items-center text-neutral/50 font-lato gap-x-2">
-          <span className="text-neutral font-medium text-sm">20 Members</span>
+          <span className="text-neutral font-medium text-sm">
+            {num(channel?.membersCount)}{' '}
+            {pluralize('Member', num(channel?.membersCount))}
+          </span>
           <button className="btn btn-ghost btn-circle text-neutral/50 text-2xl">
             <AiOutlineUserAdd />
           </button>

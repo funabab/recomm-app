@@ -15,7 +15,7 @@ import { userConverter } from '@/firebase/converters'
 export default function ProfileRightSider() {
   const searchParams = useSearchParams()
   const { departmentId } = useParams()
-  const userId = searchParams.get('user')
+  const userId = searchParams.get('profile')
   const [user, isLoading] = useDocumentData(
     userId
       ? doc(firebaseFirestore, 'users', userId).withConverter(userConverter)
