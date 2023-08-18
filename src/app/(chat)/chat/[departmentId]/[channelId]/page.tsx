@@ -1,5 +1,5 @@
-import ChatMessageList from '../components/ChatMessageList'
+import DepartmentChannelChat from '../components/DepartmentChannelChat'
 
 export default function ChannelChat() {
-  return <ChatMessageList />
+  return <DepartmentChannelChat />
 }

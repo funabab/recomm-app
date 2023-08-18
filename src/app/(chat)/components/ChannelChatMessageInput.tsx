@@ -16,14 +16,22 @@ import { BsEmojiSmile } from 'react-icons/bs'
 import * as Popover from '@radix-ui/react-popover'
 import emojiData from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
+type Reference = { label: string; value: string }
 interface Props {
   placeholder?: string
+  references?: Reference[]
+  onSendMessage?: (message: string, reference: string) => void
 }
 
-export default function ChannelChatMessageInput({ placeholder }: Props) {
+export default function ChannelChatMessageInput({
+  placeholder,
+  references,
+  onSendMessage,
+}: Props) {
   const [showEmojiPopup, setShowEmojiPopup] = useState(false)
+  const referenceRef = useRef<HTMLSelectElement>(null)
 
   const editor = useEditor({
     extensions: [
@@ -71,6 +79,16 @@ export default function ChannelChatMessageInput({ placeholder }: Props) {
         </div>
 
         <div className="flex flex-row items-center gap-x-2 pb-2">
+          {references && (
+            <select className="select select-sm" ref={referenceRef}>
+              {references.map((ref) => (
+                <option key={ref.value} value={ref.value}>
+                  {ref.label}
+                </option>
+              ))}
+            </select>
+          )}
+
           <Popover.Root open={showEmojiPopup} onOpenChange={setShowEmojiPopup}>
             <Popover.Trigger asChild>
               <button className="p-1 text-neutral">
@@ -95,7 +113,12 @@ export default function ChannelChatMessageInput({ placeholder }: Props) {
             </Popover.Portal>
           </Popover.Root>
 
-          <button className="btn btn-ghost btn-circle text-2xl">
+          <button
+            className="btn btn-ghost btn-circle text-2xl"
+            onClick={() => {
+              onSendMessage?.(editor!.getHTML(), referenceRef.current!.value)
+            }}
+          >
             <AiOutlineSend />
           </button>
         </div>

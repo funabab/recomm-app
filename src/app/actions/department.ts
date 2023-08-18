@@ -121,6 +121,14 @@ export const createDepartmentChannel = async (
 
   const decodedToken = await firebaseAdminAuth.verifyIdToken(token)
 
+  const departmentDoc = await firebaseAdminFirestore
+    .doc(`departments/${department}`)
+    .get()
+
+  if (!departmentDoc.exists) {
+    throw new Error('Department does not exist')
+  }
+
   const channelDoc = await firebaseAdminFirestore
     .collection('departmentChannels')
     .add({
@@ -137,6 +145,7 @@ export const createDepartmentChannel = async (
     departmentId: department,
     userId: decodedToken.uid,
     channelTitle: title,
+    role: departmentDoc.data()?.role,
     channelId: channelDoc.id,
     createdAt: FieldValue.serverTimestamp(),
   })
@@ -203,5 +212,38 @@ export const acceptDepartmentInvitation = async (
 
   return {
     message: 'Invitation accepted successfully',
+  }
+}
+
+export const addMessageToChannel = async (
+  body: {
+    content: string
+    departmentId: string
+    channelId: string
+  },
+  token: string
+) => {
+  const decodedToken = await firebaseAdminAuth.verifyIdToken(token)
+  const { uid } = decodedToken
+
+  const user = await firebaseAdminAuth.getUser(uid)
+
+  const channelMembershipDoc = await firebaseAdminFirestore
+    .collection('departmentChannelMembers')
+    .where('userId', '==', uid)
+    .get()
+
+  await firebaseAdminFirestore
+    .doc(`departmentChannels/${body.channelId}`)
+    .collection('messages')
+    .add({
+      content: body.content,
+      displayName: user.displayName,
+      role: channelMembershipDoc.docs[0].data()?.role,
+      createdAt: FieldValue.serverTimestamp(),
+    })
+
+  return {
+    message: 'Message added successfully',
   }
 }
