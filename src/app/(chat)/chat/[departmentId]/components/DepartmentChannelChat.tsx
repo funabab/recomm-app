@@ -8,57 +8,41 @@ import {
 import ChannelChatMessageInput from '@/app/(chat)/components/ChannelChatMessageInput'
 import ChannelChatMessage from '@/app/(chat)/components/ChannelChatMessage'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
-import { Timestamp, collection } from 'firebase/firestore'
-import { firebaseAuth, firebaseFirestore } from '@/firebase/client'
+import {
+  addDoc,
+  collection,
+  orderBy,
+  query,
+  serverTimestamp,
+} from 'firebase/firestore'
+import { firebaseFirestore } from '@/firebase/client'
 import { departmentChannelMessageConverter } from '@/firebase/converters'
 import { LoaderScreen } from '@/app/components/Loader'
 import pluralize from 'pluralize'
 import { num } from '@/utils/commons'
 import { useDepartmentValues } from '@/app/(chat)/components/DepertmentProvider'
 import { useTransition } from 'react'
-import { addMessageToChannel } from '@/app/actions/departmentChannel'
-import { experimental_useOptimistic as useOptimistic } from 'react'
 import { useUser } from '@/app/components/AuthProtect'
-import { DepartmentChannelMessage, UserRole } from '@/typings'
 
 export default function DepartmentChannelChat() {
   const { currentChannel } = useDepartmentValues()
   const user = useUser()
-  const [departmentChannelMessages] = useCollectionData(
+  const [departmentChannelMessages, isLoadingMessages] = useCollectionData(
     currentChannel &&
-      collection(
-        firebaseFirestore,
-        'departmentChannels',
-        currentChannel.id,
-        'messages'
+      query(
+        collection(
+          firebaseFirestore,
+          'departmentChannels',
+          currentChannel.id,
+          'messages'
+        ),
+        orderBy('createdAt')
       ).withConverter(departmentChannelMessageConverter)
   )
   const [isPendingAddingMessage, startAddingMessageTransaction] =
     useTransition()
 
-  const [optimisticMessage, addOptimisticMessage] = useOptimistic<
-    DepartmentChannelMessage[] | undefined
-  >(departmentChannelMessages, (state, newMessage: string) =>
-    state
-      ? ([
-          ...state,
-          {
-            content: newMessage,
-            createdBy: user?.uid,
-            createdAt: Timestamp.now(),
-            id: crypto.randomUUID(),
-            userRole: user?.memberships?.find(
-              (membership) =>
-                membership.departmentId === currentChannel?.departmentId
-            )?.role,
-            userDisplayName: user?.displayName,
-            isSending: true,
-          },
-        ] as DepartmentChannelMessage[])
-      : []
-  )
-
-  if (!currentChannel) {
+  if (!currentChannel || isLoadingMessages) {
     return <LoaderScreen />
   }
 
@@ -96,7 +80,7 @@ export default function DepartmentChannelChat() {
       </header>
       <div className="flex-1 min-h-0 flex flex-col">
         <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-primary">
-          {optimisticMessage?.map((departmentChannelMessage) => (
+          {departmentChannelMessages?.map((departmentChannelMessage) => (
             <ChannelChatMessage
               key={departmentChannelMessage.id}
               message={departmentChannelMessage}
@@ -107,16 +91,24 @@ export default function DepartmentChannelChat() {
           <ChannelChatMessageInput
             placeholder={`Message # ${currentChannel.title}`}
             onSendMessage={(message) => {
-              addOptimisticMessage(message)
               startAddingMessageTransaction(async () => {
-                const token = await user?.getIdToken()
-                await addMessageToChannel(
+                await addDoc(
+                  collection(
+                    firebaseFirestore,
+                    'departmentChannels',
+                    currentChannel.id,
+                    'messages'
+                  ),
                   {
-                    channelId: currentChannel.id,
                     content: message,
-                    departmentId: currentChannel.departmentId,
-                  },
-                  token!
+                    userDisplayName: user?.displayName,
+                    userRole: user?.memberships?.find(
+                      (membership) =>
+                        membership.departmentId === currentChannel.departmentId
+                    )?.role,
+                    createdBy: user?.uid,
+                    createdAt: serverTimestamp(),
+                  }
                 )
               })
             }}

@@ -33,7 +33,7 @@ export default function ChannelChatMessage({
               {message.userDisplayName}
             </strong>
             <span className="text-xs font-medium text-neutral/80">
-              {dayjs(message.createdAt.toDate()).format(
+              {dayjs(message.createdAt?.toDate()).format(
                 'MMMM DD, YYYY hh:mm A'
               )}
             </span>
