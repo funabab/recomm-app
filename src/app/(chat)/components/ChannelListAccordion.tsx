@@ -10,9 +10,8 @@ import { toast } from 'react-hot-toast'
 import { RxCross2 } from 'react-icons/rx'
 import { createDepartmentChannel } from '@/app/actions/departmentChannel'
 import { useParams } from 'next/navigation'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { firebaseAuth } from '@/firebase/client'
 import { useDepartmentValues } from './DepertmentProvider'
+import { useUser } from '@/app/components/AuthProtect'
 
 interface Props extends Omit<Accordion.AccordionSingleProps, 'type'> {}
 
@@ -21,7 +20,7 @@ export default function ChannelListAccordion(props: Props) {
   const [isPending, startTransition] = useTransition()
   const formRef = useRef<HTMLFormElement>(null)
   const [showCreateChannelDialog, setShowCreateChannelDialog] = useState(false)
-  const [user] = useAuthState(firebaseAuth)
+  const user = useUser()
   const { currentChannelMembership } = useDepartmentValues()
 
   return (

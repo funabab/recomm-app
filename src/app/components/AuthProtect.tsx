@@ -39,7 +39,11 @@ export default function AuthProtect({ children, redirectTo = '/' }: Props) {
   }, [userSnapshot, firebaseUser, isLoadingFirebaseUser, router, redirectTo])
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{ user: user && Object.assign(firebaseUser!, user) }}
+    >
+      {children}
+    </AuthContext.Provider>
   )
 }
 

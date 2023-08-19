@@ -3,13 +3,18 @@ import { initialFromTitleText } from '@/utils/commons'
 import { USER_ROLES } from '@/utils/constants'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import { RotatingLines } from 'react-loader-spinner'
 import sanitize from 'sanitize-html'
 
 interface Props {
-  message: DepartmentChannelMessage
+  message: DepartmentChannelMessage & {
+    isSending?: boolean
+  }
 }
 
-export default function ChannelChatMessage({ message }: Props) {
+export default function ChannelChatMessage({
+  message: { isSending, ...message },
+}: Props) {
   return (
     <div className="px-[19px] py-5 border-b border-b-neutral-content last:border-b-0">
       <div className="flex flex-row items-start gap-x-[7px]">
@@ -32,6 +37,15 @@ export default function ChannelChatMessage({ message }: Props) {
                 'MMMM DD, YYYY hh:mm A'
               )}
             </span>
+            {isSending && (
+              <RotatingLines
+                strokeColor="#30784C"
+                strokeWidth="5"
+                animationDuration="0.75"
+                width="16"
+                visible={true}
+              />
+            )}
           </p>
           <span className="text-xs ml-1 font-medium text-neutral/80">
             {USER_ROLES[message.userRole]}

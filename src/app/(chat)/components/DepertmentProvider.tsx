@@ -1,6 +1,6 @@
 'use client'
 import React, { createContext, useContext } from 'react'
-import { firebaseAuth, firebaseFirestore } from '@/firebase/client'
+import { firebaseFirestore } from '@/firebase/client'
 import {
   departmentChannelConverter,
   departmentChannelMemberConverter,
@@ -13,11 +13,11 @@ import {
 } from '@/typings'
 import { and, collection, doc, or, query, where } from 'firebase/firestore'
 import { useParams } from 'next/navigation'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import {
   useCollectionData,
   useDocumentData,
 } from 'react-firebase-hooks/firestore'
+import { useUser } from '@/app/components/AuthProtect'
 
 type DepartmentContextValue = {
   currentDepartment?: Department
@@ -35,7 +35,7 @@ interface Props {
 
 export default function DepartmentProvider({ children }: Props) {
   const { departmentId, channelId } = useParams()
-  const [user] = useAuthState(firebaseAuth)
+  const user = useUser()
 
   const [currentDepartment] = useDocumentData(
     departmentId

@@ -8,7 +8,7 @@ import {
 import ChannelChatMessageInput from '@/app/(chat)/components/ChannelChatMessageInput'
 import ChannelChatMessage from '@/app/(chat)/components/ChannelChatMessage'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
-import { collection } from 'firebase/firestore'
+import { Timestamp, collection } from 'firebase/firestore'
 import { firebaseAuth, firebaseFirestore } from '@/firebase/client'
 import { departmentChannelMessageConverter } from '@/firebase/converters'
 import { LoaderScreen } from '@/app/components/Loader'
@@ -17,11 +17,13 @@ import { num } from '@/utils/commons'
 import { useDepartmentValues } from '@/app/(chat)/components/DepertmentProvider'
 import { useTransition } from 'react'
 import { addMessageToChannel } from '@/app/actions/departmentChannel'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { experimental_useOptimistic as useOptimistic } from 'react'
+import { useUser } from '@/app/components/AuthProtect'
+import { DepartmentChannelMessage, UserRole } from '@/typings'
 
 export default function DepartmentChannelChat() {
   const { currentChannel } = useDepartmentValues()
-  const [user] = useAuthState(firebaseAuth)
+  const user = useUser()
   const [departmentChannelMessages] = useCollectionData(
     currentChannel &&
       collection(
@@ -33,6 +35,28 @@ export default function DepartmentChannelChat() {
   )
   const [isPendingAddingMessage, startAddingMessageTransaction] =
     useTransition()
+
+  const [optimisticMessage, addOptimisticMessage] = useOptimistic<
+    DepartmentChannelMessage[] | undefined
+  >(departmentChannelMessages, (state, newMessage: string) =>
+    state
+      ? ([
+          ...state,
+          {
+            content: newMessage,
+            createdBy: user?.uid,
+            createdAt: Timestamp.now(),
+            id: crypto.randomUUID(),
+            userRole: user?.memberships?.find(
+              (membership) =>
+                membership.departmentId === currentChannel?.departmentId
+            )?.role,
+            userDisplayName: user?.displayName,
+            isSending: true,
+          },
+        ] as DepartmentChannelMessage[])
+      : []
+  )
 
   if (!currentChannel) {
     return <LoaderScreen />
@@ -72,7 +96,7 @@ export default function DepartmentChannelChat() {
       </header>
       <div className="flex-1 min-h-0 flex flex-col">
         <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-primary">
-          {departmentChannelMessages?.map((departmentChannelMessage) => (
+          {optimisticMessage?.map((departmentChannelMessage) => (
             <ChannelChatMessage
               key={departmentChannelMessage.id}
               message={departmentChannelMessage}
@@ -82,8 +106,8 @@ export default function DepartmentChannelChat() {
         <div className="shrink-0">
           <ChannelChatMessageInput
             placeholder={`Message # ${currentChannel.title}`}
-            disabled={isPendingAddingMessage}
-            onSendMessage={(message) =>
+            onSendMessage={(message) => {
+              addOptimisticMessage(message)
               startAddingMessageTransaction(async () => {
                 const token = await user?.getIdToken()
                 await addMessageToChannel(
@@ -95,7 +119,7 @@ export default function DepartmentChannelChat() {
                   token!
                 )
               })
-            }
+            }}
           />
         </div>
       </div>
