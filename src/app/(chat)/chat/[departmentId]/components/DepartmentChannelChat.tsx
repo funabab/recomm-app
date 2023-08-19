@@ -7,19 +7,32 @@ import {
 } from 'react-icons/ai'
 import ChannelChatMessageInput from '@/app/(chat)/components/ChannelChatMessageInput'
 import ChannelChatMessage from '@/app/(chat)/components/ChannelChatMessage'
-import { useDocumentData } from 'react-firebase-hooks/firestore'
-import { doc } from 'firebase/firestore'
-import { firebaseFirestore } from '@/firebase/client'
-import { useParams } from 'next/navigation'
-import { departmentChannelConverter } from '@/firebase/converters'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+import { collection } from 'firebase/firestore'
+import { firebaseAuth, firebaseFirestore } from '@/firebase/client'
+import { departmentChannelMessageConverter } from '@/firebase/converters'
 import { LoaderScreen } from '@/app/components/Loader'
 import pluralize from 'pluralize'
 import { num } from '@/utils/commons'
 import { useDepartmentValues } from '@/app/(chat)/components/DepertmentProvider'
+import { useTransition } from 'react'
+import { addMessageToChannel } from '@/app/actions/departmentChannel'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 export default function DepartmentChannelChat() {
-  const { channelId } = useParams()
   const { currentChannel } = useDepartmentValues()
+  const [user] = useAuthState(firebaseAuth)
+  const [departmentChannelMessages] = useCollectionData(
+    currentChannel &&
+      collection(
+        firebaseFirestore,
+        'departmentChannels',
+        currentChannel.id,
+        'messages'
+      ).withConverter(departmentChannelMessageConverter)
+  )
+  const [isPendingAddingMessage, startAddingMessageTransaction] =
+    useTransition()
 
   if (!currentChannel) {
     return <LoaderScreen />
@@ -59,11 +72,30 @@ export default function DepartmentChannelChat() {
       </header>
       <div className="flex-1 min-h-0 flex flex-col">
         <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-primary">
-          <ChannelChatMessage message="Lorem ipsum occaecat id consequat do et fugiat labore minim velit tempor esse ad irure tempor aliqua id cupidatat in occaecat mollit laborum tempor sit officia non velit officia laborum irure cupidatat et in tempor ut qui officia in nisi dolore amet proident nulla et aliqua id nisi eu non in cillum sit enim incididunt dolor enim magna aliqua pariatur est id cupidatat laboris laboris adipisicing veniam sed aliquip aute reprehenderit est dolor anim id dolore minim cupidatat esse ut officia consectetur eu in id nostrud tempor labore do exercitation cupidatat dolore labore irure labore commodo exercitation commodo officia minim " />
+          {departmentChannelMessages?.map((departmentChannelMessage) => (
+            <ChannelChatMessage
+              key={departmentChannelMessage.id}
+              message={departmentChannelMessage}
+            />
+          ))}
         </div>
         <div className="shrink-0">
           <ChannelChatMessageInput
             placeholder={`Message # ${currentChannel.title}`}
+            disabled={isPendingAddingMessage}
+            onSendMessage={(message) =>
+              startAddingMessageTransaction(async () => {
+                const token = await user?.getIdToken()
+                await addMessageToChannel(
+                  {
+                    channelId: currentChannel.id,
+                    content: message,
+                    departmentId: currentChannel.departmentId,
+                  },
+                  token!
+                )
+              })
+            }
           />
         </div>
       </div>

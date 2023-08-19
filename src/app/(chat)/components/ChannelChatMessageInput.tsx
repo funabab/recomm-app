@@ -17,34 +17,44 @@ import * as Popover from '@radix-ui/react-popover'
 import emojiData from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { useRef, useState } from 'react'
+import clsx from 'clsx'
 
 type Reference = { label: string; value: string }
 interface Props {
   placeholder?: string
   references?: Reference[]
-  onSendMessage?: (message: string, reference: string) => void
+  onSendMessage?: (message: string, reference?: string) => void
+  disabled?: boolean
 }
 
 export default function ChannelChatMessageInput({
   placeholder,
   references,
   onSendMessage,
+  disabled = false,
 }: Props) {
   const [showEmojiPopup, setShowEmojiPopup] = useState(false)
   const referenceRef = useRef<HTMLSelectElement>(null)
 
   const editor = useEditor({
+    editable: !disabled,
     extensions: [
       StarterKit,
       Placeholder.configure({
         placeholder: placeholder,
+        showOnlyWhenEditable: false,
       }),
       Link,
     ],
   })
   return (
-    <div className="border border-primary rounded mb-6 mx-[14px] mt-2">
-      <EditorContent editor={editor} className="" />
+    <div
+      className={twMerge(
+        'border border-primary rounded mb-6 mx-[14px] mt-2',
+        disabled && 'opacity-60 border-primary/40'
+      )}
+    >
+      <EditorContent editor={editor} />
       <div className="px-[13px] flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-x-1">
           <button
@@ -114,9 +124,15 @@ export default function ChannelChatMessageInput({
           </Popover.Root>
 
           <button
-            className="btn btn-ghost btn-circle text-2xl"
+            className="btn btn-ghost btn-circle text-2xl outline-none"
             onClick={() => {
-              onSendMessage?.(editor!.getHTML(), referenceRef.current!.value)
+              const content = editor!.getHTML()
+              editor?.commands.clearContent()
+
+              onSendMessage?.(
+                content,
+                references && referenceRef.current!.value
+              )
             }}
           >
             <AiOutlineSend />

@@ -110,51 +110,6 @@ export const deleteUserInvitation = async (invitationId: string) => {
   }
 }
 
-export const createDepartmentChannel = async (
-  formdata: FormData,
-  token: string
-) => {
-  const title = formdata.get('title') as string
-  const description = formdata.get('description') as string
-  const department = formdata.get('department') as string
-  const channelType = formdata.get('type') as string
-
-  const decodedToken = await firebaseAdminAuth.verifyIdToken(token)
-
-  const departmentDoc = await firebaseAdminFirestore
-    .doc(`departments/${department}`)
-    .get()
-
-  if (!departmentDoc.exists) {
-    throw new Error('Department does not exist')
-  }
-
-  const channelDoc = await firebaseAdminFirestore
-    .collection('departmentChannels')
-    .add({
-      title,
-      description,
-      departmentId: department,
-      type: channelType,
-      createdBy: decodedToken.uid,
-      createdAt: FieldValue.serverTimestamp(),
-    })
-
-  await firebaseAdminFirestore.collection('departmentChannelMembers').add({
-    channelType,
-    departmentId: department,
-    userId: decodedToken.uid,
-    channelTitle: title,
-    role: departmentDoc.data()?.role,
-    channelId: channelDoc.id,
-    createdAt: FieldValue.serverTimestamp(),
-  })
-
-  return {
-    message: 'Channel created successfully',
-  }
-}
-
 export const acceptDepartmentInvitation = async (
   body: { id: string; email: string | null; displayName: string | null },
   tokenId: string
@@ -212,38 +167,5 @@ export const acceptDepartmentInvitation = async (
 
   return {
     message: 'Invitation accepted successfully',
-  }
-}
-
-export const addMessageToChannel = async (
-  body: {
-    content: string
-    departmentId: string
-    channelId: string
-  },
-  token: string
-) => {
-  const decodedToken = await firebaseAdminAuth.verifyIdToken(token)
-  const { uid } = decodedToken
-
-  const user = await firebaseAdminAuth.getUser(uid)
-
-  const channelMembershipDoc = await firebaseAdminFirestore
-    .collection('departmentChannelMembers')
-    .where('userId', '==', uid)
-    .get()
-
-  await firebaseAdminFirestore
-    .doc(`departmentChannels/${body.channelId}`)
-    .collection('messages')
-    .add({
-      content: body.content,
-      displayName: user.displayName,
-      role: channelMembershipDoc.docs[0].data()?.role,
-      createdAt: FieldValue.serverTimestamp(),
-    })
-
-  return {
-    message: 'Message added successfully',
   }
 }
