@@ -13,6 +13,7 @@ export const createDepartmentChannel = async (
   const channelType = formdata.get('type') as string
 
   const decodedToken = await firebaseAdminAuth.verifyIdToken(token)
+  const user = await firebaseAdminAuth.getUser(decodedToken.uid)
 
   const departmentMembership = await firebaseAdminFirestore
     .collection('departmentMembers')
@@ -38,8 +39,10 @@ export const createDepartmentChannel = async (
   await firebaseAdminFirestore.collection('departmentChannelMembers').add({
     channelType,
     departmentId: department,
+
     userId: decodedToken.uid,
     userRole: departmentMembership.docs[0].data()?.userRole,
+    userDisplayName: user.displayName,
 
     channelTitle: title,
     channelId: channelDoc.id,

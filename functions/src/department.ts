@@ -9,11 +9,6 @@ export const onDepartmentMembersCollectionUpdated = onDocumentWritten(
     const userId = (event.data?.after.data()?.userId ||
       event.data?.before.data()?.userId) as string
 
-    console.log(
-      'calling onDepartmentMembersCollectionUpdated function with event',
-      event
-    )
-
     if (!event.data?.before.exists || !event.data.after.exists) {
       const departmentId = (event.data?.before.data()?.departmentId ||
         event.data?.after.data()?.departmentId) as string

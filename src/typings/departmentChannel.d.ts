@@ -5,6 +5,7 @@ export interface DepartmentChannel {
   id: string
   title: string
   membersCount?: number
+  messagesCount?: number
   description: string
   departmentId: string
   type: 'public' | 'private'
@@ -15,21 +16,13 @@ export interface DepartmentChannel {
 export interface DepartmentChannelMembership {
   id: string
   departmentId: string
-  userId: string
-  channelTitle: string
-  channelId: string
-  createdAt: Timestamp
-}
 
-export interface DepartmentMembership {
-  id: string
   userDisplayName: string
   userId: string
-  userRole: string
-  userEmail: string
+  userRole: UserRole
 
-  departmentTitle: string
-  departmentId: string
+  channelTitle: string
+  channelId: string
   createdAt: Timestamp
 }
 
