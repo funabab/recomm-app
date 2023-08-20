@@ -1,27 +1,22 @@
 'use client'
-import React, { useRef, useState, useTransition } from 'react'
+import React, { useRef } from 'react'
 import DepartmentRoleVisible from '@/app/components/DepartmentRoleVisible'
 import * as Accordion from '@radix-ui/react-accordion'
 import Link from 'next/link'
 import { AiFillCaretDown, AiFillPlusSquare } from 'react-icons/ai'
 import { BiHash } from 'react-icons/bi'
-import * as Dialog from '@radix-ui/react-dialog'
-import { toast } from 'react-hot-toast'
-import { RxCross2 } from 'react-icons/rx'
-import { createDepartmentChannel } from '@/app/actions/departmentChannel'
 import { useParams } from 'next/navigation'
 import { useDepartmentValues } from './DepertmentProvider'
-import { useUser } from '@/app/components/AuthProtect'
+import CreateDepartmentChannelModal, {
+  CreateDepartmentChannelModalRef,
+} from './CreateDepartmentChannelModal'
 
 interface Props extends Omit<Accordion.AccordionSingleProps, 'type'> {}
 
 export default function ChannelListAccordion(props: Props) {
   const { departmentId } = useParams()
-  const [isPending, startTransition] = useTransition()
-  const formRef = useRef<HTMLFormElement>(null)
-  const [showCreateChannelDialog, setShowCreateChannelDialog] = useState(false)
-  const user = useUser()
   const { currentChannelMembership } = useDepartmentValues()
+  const createChannelDialogRef = useRef<CreateDepartmentChannelModalRef>(null)
 
   return (
     <React.Fragment>
@@ -47,7 +42,7 @@ export default function ChannelListAccordion(props: Props) {
             <DepartmentRoleVisible roles={['admin', 'hod']}>
               <button
                 className="btn btn-ghost font-lato w-full rounded-none justify-start pl-6 text-sm min-h-0 h-10 text-primary/80 no-animation"
-                onClick={() => setShowCreateChannelDialog(true)}
+                onClick={() => createChannelDialogRef.current?.showModal()}
               >
                 <AiFillPlusSquare className="text-2xl" />
                 Add Channel
@@ -58,104 +53,10 @@ export default function ChannelListAccordion(props: Props) {
       </Accordion.Root>
 
       {departmentId && (
-        <Dialog.Root
-          open={showCreateChannelDialog}
-          onOpenChange={setShowCreateChannelDialog}
-        >
-          <Dialog.Portal>
-            <Dialog.Overlay className="bg-black/40 data-[state=open]:animate-overlayShow fixed inset-0" />
-            <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[550px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
-              <Dialog.Title className="text-mauve12 m-0 text-[17px] font-medium">
-                Create Department Channel
-              </Dialog.Title>
-
-              <form
-                ref={formRef}
-                action={(formdata) => {
-                  startTransition(async () => {
-                    try {
-                      const token = await user?.getIdToken()
-                      const { message } = await createDepartmentChannel(
-                        formdata,
-                        token!
-                      )
-                      toast.success(message)
-                      setShowCreateChannelDialog(false)
-                      formRef.current?.reset()
-                    } catch (e) {
-                      const err = e as Error
-                      toast.error(err.message)
-                    }
-                  })
-                }}
-                className="mt-5"
-              >
-                <input type="hidden" name="department" value={departmentId} />
-                <div className="space-y-5">
-                  <div className="form-control w-full">
-                    <label htmlFor="channelTitle" className="label font-lato">
-                      <span className="label-text">Channel Title</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="channelTitle"
-                      name="title"
-                      placeholder="Enter channel title"
-                      className="input input-bordered w-full"
-                      required
-                    />
-                  </div>
-
-                  <div className="form-control w-full">
-                    <label htmlFor="channelDesc" className="label font-lato">
-                      <span className="label-text">Channel Description</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="channelDesc"
-                      name="description"
-                      placeholder="Enter channel description"
-                      className="input input-bordered w-full"
-                      required
-                    />
-                  </div>
-
-                  <div className="form-control w-full">
-                    <label htmlFor="channelType" className="label font-lato">
-                      <span className="label-text">Channel Type</span>
-                    </label>
-                    <select id="channelType" name="type" className="select">
-                      <option value="public">Public</option>
-                      <option value="private">Private</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="flex justify-end mt-6">
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    disabled={isPending}
-                  >
-                    {isPending && (
-                      <span className="loading loading-spinner"></span>
-                    )}
-                    Save Details
-                  </button>
-                </div>
-              </form>
-
-              <Dialog.Close asChild>
-                <button
-                  className="btn btn-ghost btn-circle text-xl absolute top-[10px] right-[10px]"
-                  aria-label="Close"
-                >
-                  <RxCross2 />
-                </button>
-              </Dialog.Close>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
+        <CreateDepartmentChannelModal
+          ref={createChannelDialogRef}
+          departmentId={departmentId}
+        />
       )}
     </React.Fragment>
   )

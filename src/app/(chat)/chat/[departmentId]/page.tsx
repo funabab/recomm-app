@@ -5,7 +5,7 @@ export default function DepartmentHome() {
     <div className="w-full h-full justify-center items-center font-lato flex flex-col gap-y-2">
       <IconChat className="h-40" />
       <h2 className="text-2xl font-bold text-neutral mt-5">Recomm App</h2>
-      <p>
+      <p className="px-5 text-center">
         You can engage in your departmental conversations in available channels
       </p>
     </div>

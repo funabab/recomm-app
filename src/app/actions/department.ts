@@ -103,6 +103,66 @@ export const inviteUserToDepartment = async (formdata: FormData) => {
   }
 }
 
+export const inviteMemberToDepartment = async (formdata: FormData) => {
+  const fullName = formdata.get('fullname') as string
+  const email = formdata.get('email') as string
+  const department = formdata.get('department') as string
+
+  const role: UserRole = 'staff'
+  const expiryDate = dayjs().add(15, 'minute')
+
+  const existingMembership = await firebaseAdminFirestore
+    .collection('departmentMembers')
+    .where('userEmail', '==', email)
+    .where('departmentId', '==', department)
+    .get()
+
+  if (!existingMembership.empty) {
+    throw new Error('User is already a member of this department')
+  }
+
+  const departmentDoc = await firebaseAdminFirestore
+    .doc(`departments/${department}`)
+    .get()
+
+  if (!departmentDoc.exists) {
+    throw new Error('Department does not exist')
+  }
+
+  const departmentData = departmentDoc.data() as Department
+  const invitationDoc = await firebaseAdminFirestore
+    .collection('invitations')
+    .add({
+      fullName,
+      email,
+      department,
+      role,
+      expiresAt: Timestamp.fromDate(expiryDate.toDate()),
+      createdAt: FieldValue.serverTimestamp(),
+    })
+
+  await resend.emails.send({
+    from: resendSender,
+    to: [email],
+    subject: `Membership Invitation to join ${departmentData.title} department`,
+    text: `Hi ${fullName}, you have been invited to join ${
+      departmentData.title
+    } department as ${[
+      USER_ROLES[role as UserRole],
+    ]}. \n\n Click this link to accept the invitation: ${
+      process.env.NEXT_PUBLIC_BASE_URL
+    }/invitation/${
+      invitationDoc.id
+    } \n\n If you have any questions, please contact Technical Administrator. \n\n Thanks, \n ${
+      departmentData.title
+    } department`,
+  })
+
+  return {
+    message: 'Member Invitation sent successfully to ' + email,
+  }
+}
+
 export const deleteUserInvitation = async (invitationId: string) => {
   await firebaseAdminFirestore.doc(`invitations/${invitationId}`).delete()
   return {
