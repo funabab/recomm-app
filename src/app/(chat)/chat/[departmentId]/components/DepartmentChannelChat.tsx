@@ -1,5 +1,6 @@
 'use client'
 
+import React, { useMemo, useRef, useTransition } from 'react'
 import {
   AiOutlineMessage,
   AiOutlineStar,
@@ -21,11 +22,14 @@ import { LoaderScreen } from '@/app/components/Loader'
 import pluralize from 'pluralize'
 import { num } from '@/utils/commons'
 import { useDepartmentValues } from '@/app/(chat)/components/DepertmentProvider'
-import React, { useMemo, useRef, useTransition } from 'react'
 import { useUser } from '@/app/components/AuthProtect'
 import ChannelMembersModal, {
   ChannelMembersModalRef,
 } from '@/app/(chat)/components/ChannelMembersModal'
+import AddMemberToChannelModal, {
+  AddMemberToChannelModalRef,
+} from '@/app/(chat)/components/AddMemberToChannelModal'
+import DepartmentRoleVisible from '@/app/components/DepartmentRoleVisible'
 
 export default function DepartmentChannelChat() {
   const user = useUser()
@@ -45,6 +49,7 @@ export default function DepartmentChannelChat() {
   const [_isPendingAddingMessage, startAddingMessageTransaction] =
     useTransition()
   const channelMembersModalRef = useRef<ChannelMembersModalRef>(null)
+  const addMemberToChatModal = useRef<AddMemberToChannelModalRef>(null)
 
   const membersCount = useMemo(
     () =>
@@ -90,9 +95,16 @@ export default function DepartmentChannelChat() {
             >
               {membersCount} {pluralize('Member', membersCount)}
             </button>
-            <button className="btn btn-ghost btn-circle text-neutral/50 text-2xl">
-              <AiOutlineUserAdd />
-            </button>
+            {currentChannel.type === 'private' && (
+              <DepartmentRoleVisible roles={['admin', 'hod']}>
+                <button
+                  className="btn btn-ghost btn-circle text-neutral/50 text-2xl"
+                  onClick={() => addMemberToChatModal.current?.showModal()}
+                >
+                  <AiOutlineUserAdd />
+                </button>
+              </DepartmentRoleVisible>
+            )}
           </div>
         </header>
         <div className="flex-1 min-h-0 flex flex-col">
@@ -136,6 +148,7 @@ export default function DepartmentChannelChat() {
       </div>
 
       <ChannelMembersModal ref={channelMembersModalRef} />
+      <AddMemberToChannelModal ref={addMemberToChatModal} />
     </React.Fragment>
   )
 }

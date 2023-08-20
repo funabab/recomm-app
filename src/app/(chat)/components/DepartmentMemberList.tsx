@@ -36,7 +36,7 @@ export default function DepartmentMemberList({ departmentId, filter }: Props) {
     <ul className="h-full space-y-5">
       {members
         ?.sort(
-          (a, b) => userRoleRanking[a.userRole] - userRoleRanking[b.userRole]
+          (a, b) => userRoleRanking[b.userRole] - userRoleRanking[a.userRole]
         )
         .filter((member) =>
           filter

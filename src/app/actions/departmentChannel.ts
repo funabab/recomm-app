@@ -87,3 +87,55 @@ export const addMessageToChannel = async (
     message: 'Message added successfully',
   }
 }
+
+export const addMemberToChannel = async (body: {
+  memberId: string
+  channelId: string
+}) => {
+  const user = await firebaseAdminFirestore.doc(`users/${body.memberId}`).get()
+  const channel = await firebaseAdminFirestore
+    .doc(`departmentChannels/${body.channelId}`)
+    .get()
+
+  const channelMembership = await firebaseAdminFirestore
+    .collection('departmentChannelMembers')
+    .where('channelId', '==', body.channelId)
+    .where('userId', '==', body.memberId)
+    .get()
+
+  if (channelMembership.docs[0]?.exists) {
+    throw new Error('Member already exists')
+  }
+
+  if (!user.exists) {
+    throw new Error('User does not exist')
+  }
+
+  if (!channel.exists) {
+    throw new Error('Channel does not exist')
+  }
+
+  const departmentId = channel.data()?.departmentId
+  const role = user
+    .data()
+    ?.memberships.find(
+      (membership: any) => membership.departmentId === departmentId
+    ).role
+
+  await firebaseAdminFirestore.collection('departmentChannelMembers').add({
+    departmentId,
+    channelId: channel.id,
+    channelTitle: channel.data()?.title,
+    channelType: channel.data()?.type,
+
+    userId: user.data()?.uid,
+    userRole: role,
+    userDisplayName: user.data()?.displayName,
+
+    createdAt: FieldValue.serverTimestamp(),
+  })
+
+  return {
+    message: 'Member added successfully',
+  }
+}
