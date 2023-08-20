@@ -21,12 +21,12 @@ import { LoaderScreen } from '@/app/components/Loader'
 import pluralize from 'pluralize'
 import { num } from '@/utils/commons'
 import { useDepartmentValues } from '@/app/(chat)/components/DepertmentProvider'
-import { useTransition } from 'react'
+import { useMemo, useTransition } from 'react'
 import { useUser } from '@/app/components/AuthProtect'
 
 export default function DepartmentChannelChat() {
-  const { currentChannel } = useDepartmentValues()
   const user = useUser()
+  const { currentChannel, currentDepartment } = useDepartmentValues()
   const [departmentChannelMessages, isLoadingMessages] = useCollectionData(
     currentChannel &&
       query(
@@ -39,8 +39,18 @@ export default function DepartmentChannelChat() {
         orderBy('createdAt')
       ).withConverter(departmentChannelMessageConverter)
   )
-  const [isPendingAddingMessage, startAddingMessageTransaction] =
+  const [_isPendingAddingMessage, startAddingMessageTransaction] =
     useTransition()
+
+  const membersCount = useMemo(
+    () =>
+      num(
+        currentChannel?.type === 'public'
+          ? currentDepartment?.membersCount
+          : currentChannel?.membersCount
+      ),
+    [currentChannel, currentDepartment]
+  )
 
   if (!currentChannel || isLoadingMessages) {
     return <LoaderScreen />
@@ -61,7 +71,7 @@ export default function DepartmentChannelChat() {
           <p className="text-[13px] m-0 text-neutral/60 mt-px flex items-center">
             <AiOutlineMessage />
             <span className="pl-1 pr-2 border-r border-r-neutral-content">
-              13
+              {num(currentChannel.membersCount)}
             </span>
             <span className="px-2 truncate max-w-[10rem] lg:max-w-2xl">
               {currentChannel?.description}
@@ -70,8 +80,7 @@ export default function DepartmentChannelChat() {
         </div>
         <div className="flex flex-row items-center text-neutral/50 font-lato gap-x-2">
           <span className="text-neutral font-medium text-sm">
-            {num(currentChannel?.membersCount)}{' '}
-            {pluralize('Member', num(currentChannel?.membersCount))}
+            {membersCount} {pluralize('Member', membersCount)}
           </span>
           <button className="btn btn-ghost btn-circle text-neutral/50 text-2xl">
             <AiOutlineUserAdd />

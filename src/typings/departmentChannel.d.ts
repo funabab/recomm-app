@@ -7,6 +7,7 @@ export interface DepartmentChannel {
   membersCount?: number
   description: string
   departmentId: string
+  type: 'public' | 'private'
   createdBy: string
   createdAt: Timestamp
 }

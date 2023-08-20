@@ -18,3 +18,20 @@ export const onDepartmentChannelMembersCollectionUpdated = onDocumentWritten(
     }
   }
 )
+
+export const onDepartmentChannelMessagesCollectionUpdated = onDocumentWritten(
+  'departmentChannels/{channelId}/messages/{messageId}',
+  async (event) => {
+    const firestore = getFirestore()
+
+    if (!event.data?.before.exists || !event.data?.after.exists) {
+      await firestore
+        .doc(`departmentChannels/${event.params.channelId}`)
+        .update({
+          messagesCount: event.data?.after.exists
+            ? FieldValue.increment(1)
+            : FieldValue.increment(-1),
+        })
+    }
+  }
+)
