@@ -139,31 +139,32 @@ export default React.forwardRef<AddMemberToChannelModalRef, Props>(
                           </div>
                         </div>
 
-                        {!channelMemberIds.includes(member.uid) && (
-                          <DepartmentRoleVisible roles={['admin', 'hod']}>
-                            <button
-                              className="btn btn-ghost btn-sm text-primary"
-                              onClick={() => {
-                                startAddUserTransition(async () => {
-                                  try {
-                                    const { message } =
-                                      await addMemberToChannel({
-                                        channelId: currentChannel.id,
-                                        memberId: member.uid,
-                                      })
-                                    toast.success(message)
-                                  } catch (e) {
-                                    const err = e as Error
-                                    toast.error(err.message)
-                                  }
-                                })
-                              }}
-                              disabled={isPendingAddMember}
-                            >
-                              Add
-                            </button>
-                          </DepartmentRoleVisible>
-                        )}
+                        {!channelMemberIds.includes(member.uid) &&
+                          currentChannel.type === 'private' && (
+                            <DepartmentRoleVisible roles={['admin', 'hod']}>
+                              <button
+                                className="btn btn-ghost btn-sm text-primary"
+                                onClick={() => {
+                                  startAddUserTransition(async () => {
+                                    try {
+                                      const { message } =
+                                        await addMemberToChannel({
+                                          channelId: currentChannel.id,
+                                          memberId: member.uid,
+                                        })
+                                      toast.success(message)
+                                    } catch (e) {
+                                      const err = e as Error
+                                      toast.error(err.message)
+                                    }
+                                  })
+                                }}
+                                disabled={isPendingAddMember}
+                              >
+                                Add
+                              </button>
+                            </DepartmentRoleVisible>
+                          )}
                       </li>
                     ))}
                 </ul>

@@ -33,7 +33,7 @@ export default function ChannelListAccordion(props: Props) {
               <Link
                 key={membership.id}
                 href={`/chat/${membership.departmentId}/${membership.channelId}`}
-                className="btn btn-ghost font-lato w-full rounded-none justify-start pl-6 text-sm min-h-0 h-10 text-neutral no-animation uppercase"
+                className="btn btn-ghost btn-sm font-lato w-full rounded-none justify-start pl-6 text-xs min-h-0 h-10 text-neutral no-animation uppercase"
               >
                 <BiHash />
                 {membership.channelTitle}
