@@ -9,7 +9,7 @@ export interface DepartmentChannel {
   description: string
   departmentId: string
   type: 'public' | 'private'
-  createdBy: string
+  author: string
   createdAt: Timestamp
 }
 
@@ -31,6 +31,7 @@ export interface DepartmentChannelMessage {
   content: string
   userDisplayName: string
   userRole: UserRole
-  createdBy: string
+  author: string
+
   createdAt: Timestamp
 }

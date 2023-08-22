@@ -32,7 +32,7 @@ export const createDepartmentChannel = async (
       description,
       departmentId: department,
       type: channelType,
-      createdBy: decodedToken.uid,
+      author: decodedToken.uid,
       createdAt: FieldValue.serverTimestamp(),
     })
 
@@ -79,7 +79,7 @@ export const addMessageToChannel = async (
       content: body.content,
       userDisplayName: user.displayName,
       userRole: channelMembershipDoc.docs[0].data()?.userRole,
-      createdBy: uid,
+      author: uid,
       createdAt: FieldValue.serverTimestamp(),
     })
 

@@ -29,7 +29,7 @@ export interface DepartmentBoardMessage {
   userDepartmentTitle: string
   userDepartmentId: string
 
+  author: string
   visibleTo?: string
-  createdBy: string
   createdAt: Timestamp
 }

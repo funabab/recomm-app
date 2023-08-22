@@ -36,7 +36,7 @@ export default function DepartmentNoticeBoard() {
           collection(firebaseFirestore, 'departmentBoardMessages'),
           or(
             where('visibleTo', 'in', ['@', currentDepartment.id]),
-            where('createdBy', '==', user.uid)
+            where('author', '==', user.uid)
           ),
           orderBy('createdAt')
         ).withConverter(departmentBoardMessageConverter)
@@ -138,7 +138,7 @@ export default function DepartmentNoticeBoard() {
                       userDepartmentId: currentDepartment?.id,
 
                       visibleTo: reference,
-                      createdBy: user?.uid,
+                      author: user?.uid,
                       createdAt: serverTimestamp(),
                     }
                   )

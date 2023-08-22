@@ -26,7 +26,7 @@ export default function ChannelChatMessage({
     <div className="px-[19px] py-5 border-b border-b-neutral-content last:border-b-0">
       <div className="flex justify-between items-start">
         <div className="flex flex-row items-start gap-x-[7px]">
-          <Link href={{ query: { profile: message.createdBy } }}>
+          <Link href={{ query: { profile: message.author } }}>
             <div className="avatar placeholder">
               <div className="w-[36px] rounded bg-neutral">
                 <span className="text-neutral-content text-xs">
@@ -39,7 +39,7 @@ export default function ChannelChatMessage({
             <p className="flex items-center gap-x-[7px] font-lato text-neutral">
               <strong className="text-[15px] font-extrabold">
                 {message.userDisplayName}
-                {user?.uid === message.createdBy && ` (You)`}
+                {user?.uid === message.author && ` (You)`}
               </strong>
               <span className="text-xs font-medium text-neutral/80">
                 {dayjs(message.createdAt?.toDate()).format(
@@ -68,7 +68,7 @@ export default function ChannelChatMessage({
         </div>
 
         <div className="flex gap-x-2 items-center">
-          {message.createdBy === user?.uid && (
+          {message.author === user?.uid && (
             <button
               className="btn btn-sm btn-circle btn-ghost text-lg"
               onClick={() => onDeleteMessage?.(message)}

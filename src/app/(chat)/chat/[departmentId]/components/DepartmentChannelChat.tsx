@@ -154,7 +154,7 @@ export default function DepartmentChannelChat() {
                             membership.departmentId ===
                             currentChannel.departmentId
                         )?.role,
-                        createdBy: user?.uid,
+                        author: user?.uid,
                         createdAt: serverTimestamp(),
                       }
                     )
