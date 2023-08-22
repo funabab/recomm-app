@@ -4,6 +4,7 @@ import ChannelChatMessage from '@/app/(chat)/components/ChannelChatMessage'
 import ChannelChatMessageInput from '@/app/(chat)/components/ChannelChatMessageInput'
 import { useDepartmentValues } from '@/app/(chat)/components/DepertmentProvider'
 import { useUser } from '@/app/components/AuthProtect'
+import { LoaderScreen } from '@/app/components/Loader'
 import { firebaseFirestore } from '@/firebase/client'
 import {
   departmentBoardMessageConverter,
@@ -13,6 +14,8 @@ import { num } from '@/utils/commons'
 import {
   addDoc,
   collection,
+  deleteDoc,
+  doc,
   or,
   orderBy,
   query,
@@ -21,12 +24,13 @@ import {
 } from 'firebase/firestore'
 import { useTransition } from 'react'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
+import { toast } from 'react-hot-toast'
 import { AiOutlineMessage } from 'react-icons/ai'
 
 export default function DepartmentNoticeBoard() {
   const { currentDepartment } = useDepartmentValues()
   const user = useUser()
-  const [boardMessages] = useCollectionData(
+  const [boardMessages, isLoadingBoardMessages] = useCollectionData(
     currentDepartment && user
       ? query(
           collection(firebaseFirestore, 'departmentBoardMessages'),
@@ -52,6 +56,10 @@ export default function DepartmentNoticeBoard() {
   )?.role
 
   const canPost = userRole === 'admin' || userRole === 'hod'
+
+  if (!currentDepartment || !user || isLoadingBoardMessages) {
+    return <LoaderScreen />
+  }
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -82,6 +90,14 @@ export default function DepartmentNoticeBoard() {
               message={{
                 ...boardMessage,
                 departmentTitle: boardMessage.userDepartmentTitle,
+              }}
+              onDeleteMessage={async (message) => {
+                await deleteDoc(
+                  doc(firebaseFirestore, 'departmentBoardMessages', message.id)
+                )
+                toast.success('Message deleted successfully', {
+                  position: 'top-right',
+                })
               }}
             />
           ))}

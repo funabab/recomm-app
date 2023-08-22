@@ -12,6 +12,8 @@ import { useCollectionData } from 'react-firebase-hooks/firestore'
 import {
   addDoc,
   collection,
+  deleteDoc,
+  doc,
   orderBy,
   query,
   serverTimestamp,
@@ -30,6 +32,7 @@ import AddMemberToChannelModal, {
   AddMemberToChannelModalRef,
 } from '@/app/(chat)/components/AddMemberToChannelModal'
 import DepartmentRoleVisible from '@/app/components/DepartmentRoleVisible'
+import { toast } from 'react-hot-toast'
 
 export default function DepartmentChannelChat() {
   const user = useUser()
@@ -113,6 +116,20 @@ export default function DepartmentChannelChat() {
               <ChannelChatMessage
                 key={departmentChannelMessage.id}
                 message={departmentChannelMessage}
+                onDeleteMessage={async (message) => {
+                  await deleteDoc(
+                    doc(
+                      firebaseFirestore,
+                      'departmentBoardMessages',
+                      currentChannel.id,
+                      'messages',
+                      message.id
+                    )
+                  )
+                  toast.success('Message deleted successfully', {
+                    position: 'top-right',
+                  })
+                }}
               />
             ))}
           </div>
