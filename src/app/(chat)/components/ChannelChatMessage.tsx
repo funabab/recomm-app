@@ -1,3 +1,4 @@
+import { useUser } from '@/app/components/AuthProtect'
 import { DepartmentChannelMessage } from '@/typings'
 import { initialFromTitleText } from '@/utils/commons'
 import { USER_ROLES } from '@/utils/constants'
@@ -8,13 +9,15 @@ import sanitize from 'sanitize-html'
 
 interface Props {
   message: DepartmentChannelMessage & {
+    departmentTitle?: string
     isSending?: boolean
   }
 }
 
 export default function ChannelChatMessage({
-  message: { isSending, ...message },
+  message: { isSending, departmentTitle, ...message },
 }: Props) {
+  const user = useUser()
   return (
     <div className="px-[19px] py-5 border-b border-b-neutral-content last:border-b-0">
       <div className="flex flex-row items-start gap-x-[7px]">
@@ -31,6 +34,7 @@ export default function ChannelChatMessage({
           <p className="flex items-center gap-x-[7px] font-lato text-neutral">
             <strong className="text-[15px] font-extrabold">
               {message.userDisplayName}
+              {user?.uid === message.createdBy && ` (You)`}
             </strong>
             <span className="text-xs font-medium text-neutral/80">
               {dayjs(message.createdAt?.toDate()).format(
@@ -48,6 +52,7 @@ export default function ChannelChatMessage({
             )}
           </p>
           <span className="text-xs ml-1 font-medium text-neutral/80">
+            {departmentTitle && `${departmentTitle} `}
             {USER_ROLES[message.userRole]}
           </span>
           <p

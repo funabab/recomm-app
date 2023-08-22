@@ -10,6 +10,7 @@ import DepartmentSidebarMenu from './components/DepartmentSidebarMenu'
 import { Toaster } from 'react-hot-toast'
 import DepartmentProvider from './components/DepertmentProvider'
 import NavigationSider from './components/NavigationSider'
+import RouteProgressbar from '../components/RouteProgressbar'
 
 export const metadata: Metadata = {
   title: 'Recomm - Department Communication',
@@ -72,6 +73,7 @@ export default function AppRootLayout({ children }: Props) {
               </div>
             </main>
             <Toaster />
+            <RouteProgressbar />
           </body>
         </html>
       </DepartmentProvider>

@@ -16,10 +16,10 @@ import { BsEmojiSmile } from 'react-icons/bs'
 import * as Popover from '@radix-ui/react-popover'
 import emojiData from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 
-type Reference = { label: string; value: string }
+type Reference = { label: string; value: string | undefined }
 interface Props {
   placeholder?: string
   references?: Reference[]
@@ -47,6 +47,17 @@ export default function ChannelChatMessageInput({
       Link,
     ],
   })
+
+  useEffect(() => {
+    if (editor) {
+      editor.setEditable(!disabled)
+      editor.extensionManager.extensions.filter(
+        (extension) => extension.name === 'placeholder'
+      )[0].options['placeholder'] = placeholder
+      editor.view.dispatch(editor.state.tr)
+    }
+  }, [disabled, placeholder, editor])
+
   return (
     <div
       className={twMerge(
@@ -63,6 +74,7 @@ export default function ChannelChatMessageInput({
               editor?.isActive('bold') && 'text-neutral'
             )}
             onClick={() => editor?.chain().focus().toggleBold().run()}
+            disabled={disabled}
           >
             <AiOutlineBold />
           </button>
@@ -73,6 +85,7 @@ export default function ChannelChatMessageInput({
               editor?.isActive('italic') && 'text-neutral'
             )}
             onClick={() => editor?.chain().focus().toggleItalic().run()}
+            disabled={disabled}
           >
             <AiOutlineItalic />
           </button>
@@ -83,6 +96,7 @@ export default function ChannelChatMessageInput({
               editor?.isActive('strike') && 'text-neutral'
             )}
             onClick={() => editor?.chain().focus().toggleStrike().run()}
+            disabled={disabled}
           >
             <AiOutlineStrikethrough />
           </button>
@@ -90,7 +104,11 @@ export default function ChannelChatMessageInput({
 
         <div className="flex flex-row items-center gap-x-2 pb-2">
           {references && (
-            <select className="select select-sm" ref={referenceRef}>
+            <select
+              className="select select-sm text-center"
+              ref={referenceRef}
+              disabled={disabled}
+            >
               {references.map((ref) => (
                 <option key={ref.value} value={ref.value}>
                   {ref.label}
@@ -101,7 +119,7 @@ export default function ChannelChatMessageInput({
 
           <Popover.Root open={showEmojiPopup} onOpenChange={setShowEmojiPopup}>
             <Popover.Trigger asChild>
-              <button className="p-1 text-neutral">
+              <button className="p-1 text-neutral" disabled={disabled}>
                 <BsEmojiSmile />
               </button>
             </Popover.Trigger>
@@ -125,6 +143,7 @@ export default function ChannelChatMessageInput({
 
           <button
             className="btn btn-ghost btn-circle text-2xl outline-none"
+            disabled={disabled}
             onClick={() => {
               const content = editor!.getHTML()
               editor?.commands.clearContent()

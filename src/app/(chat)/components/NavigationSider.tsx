@@ -6,6 +6,7 @@ import { LiaEdit } from 'react-icons/lia'
 import { AiOutlineComment, AiOutlineFile } from 'react-icons/ai'
 import ChannelListAccordion from './ChannelListAccordion'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 
 export default function NavigationSider() {
   const { departmentId } = useParams()
@@ -16,7 +17,7 @@ export default function NavigationSider() {
 
   return (
     <div className="w-[262px]">
-      <div className="py-2 px-3 border-b border-neutral-content flex justify-between items-center max-w-full">
+      <div className="py-2 px-3 border-b border-neutral-content flex justify-between items-center max-w-full h-16">
         <ChannelButton />
 
         <DepartmentRoleVisible roles={['admin', 'hod']}>
@@ -27,10 +28,13 @@ export default function NavigationSider() {
       </div>
 
       <div>
-        <button className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary no-animation">
+        <Link
+          href={`/chat/${departmentId}/notice-board`}
+          className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary no-animation"
+        >
           <AiOutlineComment />
           Notice Board
-        </button>
+        </Link>
         <button className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary no-animation">
           <AiOutlineFile />
           Resources

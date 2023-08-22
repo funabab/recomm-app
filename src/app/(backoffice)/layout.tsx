@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Toaster } from 'react-hot-toast'
+import RouteProgressbar from '../components/RouteProgressbar'
 
 interface Props {
   children: React.ReactNode
@@ -24,6 +25,7 @@ export default function BackofficeRootLayout({ children }: Props) {
       <body>
         {children}
         <Toaster position="top-right" />
+        <RouteProgressbar />
       </body>
     </html>
   )

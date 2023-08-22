@@ -68,7 +68,7 @@ export default function DepartmentChannelChat() {
   return (
     <React.Fragment>
       <div className="w-full h-full flex flex-col">
-        <header className="pt-[13px] pb-[3px] px-[22px] border-b border-b-neutral-content flex flex-row items-center justify-between">
+        <header className="px-[22px] border-b border-b-neutral-content flex flex-row items-center justify-between h-16">
           <div>
             <div className="flex flex-row gap-x-1 items-center">
               <strong className="font-lato text-[15px]">
@@ -120,27 +120,29 @@ export default function DepartmentChannelChat() {
             <ChannelChatMessageInput
               placeholder={`Message # ${currentChannel.title}`}
               onSendMessage={(message) => {
-                startAddingMessageTransaction(async () => {
-                  await addDoc(
-                    collection(
-                      firebaseFirestore,
-                      'departmentChannels',
-                      currentChannel.id,
-                      'messages'
-                    ),
-                    {
-                      content: message,
-                      userDisplayName: user?.displayName,
-                      userRole: user?.memberships?.find(
-                        (membership) =>
-                          membership.departmentId ===
-                          currentChannel.departmentId
-                      )?.role,
-                      createdBy: user?.uid,
-                      createdAt: serverTimestamp(),
-                    }
-                  )
-                })
+                if (message) {
+                  startAddingMessageTransaction(async () => {
+                    await addDoc(
+                      collection(
+                        firebaseFirestore,
+                        'departmentChannels',
+                        currentChannel.id,
+                        'messages'
+                      ),
+                      {
+                        content: message,
+                        userDisplayName: user?.displayName,
+                        userRole: user?.memberships?.find(
+                          (membership) =>
+                            membership.departmentId ===
+                            currentChannel.departmentId
+                        )?.role,
+                        createdBy: user?.uid,
+                        createdAt: serverTimestamp(),
+                      }
+                    )
+                  })
+                }
               }}
             />
           </div>

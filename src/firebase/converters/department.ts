@@ -1,4 +1,8 @@
-import { Department, DepartmentMembership } from '@/typings'
+import {
+  Department,
+  DepartmentBoardMessage,
+  DepartmentMembership,
+} from '@/typings'
 import { DocumentData, SnapshotOptions } from 'firebase/firestore'
 
 export const departmentConverter = {
@@ -29,6 +33,25 @@ export const departmentMemberConverter = {
     snapshot: DocumentData,
     options: SnapshotOptions
   ): DepartmentMembership => {
+    const data = snapshot.data(options)
+
+    return {
+      ...data,
+      id: snapshot.id,
+    }
+  },
+}
+
+export const departmentBoardMessageConverter = {
+  toFirestore: (
+    departmentBoardMessage: DepartmentBoardMessage
+  ): DocumentData => {
+    return departmentBoardMessage
+  },
+  fromFirestore: (
+    snapshot: DocumentData,
+    options: SnapshotOptions
+  ): DepartmentBoardMessage => {
     const data = snapshot.data(options)
 
     return {

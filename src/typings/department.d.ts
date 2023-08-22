@@ -19,3 +19,17 @@ export interface DepartmentMembership {
   departmentId: string
   createdAt: Timestamp
 }
+
+export interface DepartmentBoardMessage {
+  id: string
+  content: string
+
+  userDisplayName: string
+  userRole: UserRole
+  userDepartmentTitle: string
+  userDepartmentId: string
+
+  visibleTo?: string
+  createdBy: string
+  createdAt: Timestamp
+}
