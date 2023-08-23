@@ -7,6 +7,7 @@ import { AiOutlineComment, AiOutlineFile } from 'react-icons/ai'
 import ChannelListAccordion from './ChannelListAccordion'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import EditDepartmentModal from './EditDepartmentModal'
 
 export default function NavigationSider() {
   const { departmentId } = useParams()
@@ -21,9 +22,13 @@ export default function NavigationSider() {
         <ChannelButton />
 
         <DepartmentRoleVisible roles={['admin', 'hod']}>
-          <button className="btn btn-circle btn-accent text-xl text-primary shrink-0">
-            <LiaEdit />
-          </button>
+          <EditDepartmentModal
+            dialogTrigger={
+              <button className="btn btn-circle btn-accent text-xl text-primary shrink-0">
+                <LiaEdit />
+              </button>
+            }
+          />
         </DepartmentRoleVisible>
       </div>
 

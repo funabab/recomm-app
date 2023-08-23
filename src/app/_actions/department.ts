@@ -229,3 +229,18 @@ export const acceptDepartmentInvitation = async (
     message: 'Invitation accepted successfully',
   }
 }
+
+export const editDepartmentDetails = async (formdata: FormData) => {
+  const title = formdata.get('title') as string
+  const description = formdata.get('description') as string
+  const departmentId = formdata.get('departmentId') as string
+
+  await firebaseAdminFirestore.doc(`departments/${departmentId}`).update({
+    title,
+    description,
+  })
+
+  return {
+    message: 'Department details updated successfully',
+  }
+}

@@ -42,3 +42,45 @@ export const onDepartmentMembersCollectionUpdated = onDocumentWritten(
     )
   }
 )
+
+export const onDepartmentCollectionUpdated = onDocumentWritten(
+  'departments/{departmentId}',
+  async (event) => {
+    const firestore = getFirestore()
+
+    if (
+      event.data?.before.exists &&
+      event.data.after.exists &&
+      event.data?.before.data()?.title !== event.data?.after.data()?.title
+    ) {
+      const departmentId = event.params.departmentId
+
+      const deparmentMembership = await firestore
+        .collection('departmentMembers')
+        .where('departmentId', '==', departmentId)
+        .get()
+
+      const departmentBatchWriter = firestore.batch()
+      for (const membership of deparmentMembership.docs) {
+        departmentBatchWriter.update(membership.ref, {
+          departmentTitle: event.data?.after.data()?.title,
+        })
+      }
+
+      const departmentBoardMessages = await firestore
+        .collection('departmentBoardMessages')
+        .where('userDepartmentId', '==', departmentId)
+        .get()
+
+      const departmentBoardMessageBatchWriter = firestore.batch()
+      for (const message of departmentBoardMessages.docs) {
+        departmentBatchWriter.update(message.ref, {
+          userDepartmentTitle: event.data?.after.data()?.title,
+        })
+      }
+
+      await departmentBatchWriter.commit()
+      await departmentBoardMessageBatchWriter.commit()
+    }
+  }
+)
