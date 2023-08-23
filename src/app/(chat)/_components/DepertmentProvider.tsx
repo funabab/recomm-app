@@ -17,7 +17,7 @@ import {
   useCollectionData,
   useDocumentData,
 } from 'react-firebase-hooks/firestore'
-import { useUser } from '@/app/components/AuthProtect'
+import { useUser } from '@/app/_components/AuthProtect'
 
 type DepartmentContextValue = {
   currentDepartment?: Department

@@ -1,5 +1,5 @@
 import { useParams } from 'next/navigation'
-import { useUser } from '../components/AuthProtect'
+import { useUser } from '../_components/AuthProtect'
 
 export function useDepartmentRole() {
   const user = useUser()

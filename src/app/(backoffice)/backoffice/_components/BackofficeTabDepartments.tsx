@@ -6,14 +6,14 @@ import { collection, orderBy, query } from 'firebase/firestore'
 import { firebaseFirestore } from '@/firebase/client'
 import { departmentConverter } from '@/firebase/converters'
 import dayjs from 'dayjs'
-import Loader from '@/app/components/Loader'
+import Loader from '@/app/_components/Loader'
 import BackofficeCreateDepartmentModal from './BackofficeCreateDepartmentModal'
 import { useState, useTransition } from 'react'
 import { Department } from '@/typings'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import BackofficeEditDepartmentModal from './BackofficeEditDepartmentModal'
 import { toast } from 'react-hot-toast'
-import { deleteDepartment } from '@/app/actions/department'
+import { deleteDepartment } from '@/app/_actions/department'
 
 export default function BackofficeTabDepartments() {
   const [departments, isLoading] = useCollectionData(

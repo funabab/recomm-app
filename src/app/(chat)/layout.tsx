@@ -1,16 +1,16 @@
-import './styles/globals.css'
+import './_styles/globals.css'
 
 import type { Metadata } from 'next'
 import { BiMenuAltLeft, BiSearch } from 'react-icons/bi'
 import clsx from 'clsx'
 import { fontLato } from '@/utils/fonts'
-import AuthProtect from '../components/AuthProtect'
-import UserAvatar from './components/UserAvatar'
-import DepartmentSidebarMenu from './components/DepartmentSidebarMenu'
+import AuthProtect from '../_components/AuthProtect'
+import UserAvatar from './_components/UserAvatar'
+import DepartmentSidebarMenu from './_components/DepartmentSidebarMenu'
 import { Toaster } from 'react-hot-toast'
-import DepartmentProvider from './components/DepertmentProvider'
-import NavigationSider from './components/NavigationSider'
-import RouteProgressbar from '../components/RouteProgressbar'
+import DepartmentProvider from './_components/DepertmentProvider'
+import NavigationSider from './_components/NavigationSider'
+import RouteProgressbar from '../_components/RouteProgressbar'
 
 export const metadata: Metadata = {
   title: 'Recomm - Department Communication',

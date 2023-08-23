@@ -1,4 +1,4 @@
-import IconChat from '@/app/components/icons/IconChat'
+import IconChat from '@/app/_components/icons/IconChat'
 
 export default function DepartmentHome() {
   return (

@@ -2,7 +2,7 @@
 
 import { UserRole } from '@/typings'
 import React from 'react'
-import { useDepartmentRole } from '../hooks'
+import { useDepartmentRole } from '../_hooks'
 
 interface Props {
   roles: UserRole[]

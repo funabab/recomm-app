@@ -1,4 +1,4 @@
-import './styles/global.css'
+import './_styles/global.css'
 
 import { fontLato } from '@/utils/fonts'
 import clsx from 'clsx'

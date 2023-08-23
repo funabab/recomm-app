@@ -6,8 +6,8 @@ import {
   AiOutlineStar,
   AiOutlineUserAdd,
 } from 'react-icons/ai'
-import ChannelChatMessageInput from '@/app/(chat)/components/ChannelChatMessageInput'
-import ChannelChatMessage from '@/app/(chat)/components/ChannelChatMessage'
+import ChannelChatMessageInput from '@/app/(chat)/_components/ChannelChatMessageInput'
+import ChannelChatMessage from '@/app/(chat)/_components/ChannelChatMessage'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import {
   addDoc,
@@ -20,18 +20,18 @@ import {
 } from 'firebase/firestore'
 import { firebaseFirestore } from '@/firebase/client'
 import { departmentChannelMessageConverter } from '@/firebase/converters'
-import { LoaderScreen } from '@/app/components/Loader'
+import { LoaderScreen } from '@/app/_components/Loader'
 import pluralize from 'pluralize'
 import { num } from '@/utils/commons'
-import { useDepartmentValues } from '@/app/(chat)/components/DepertmentProvider'
-import { useUser } from '@/app/components/AuthProtect'
+import { useDepartmentValues } from '@/app/(chat)/_components/DepertmentProvider'
+import { useUser } from '@/app/_components/AuthProtect'
 import ChannelMembersModal, {
   ChannelMembersModalRef,
-} from '@/app/(chat)/components/ChannelMembersModal'
+} from '@/app/(chat)/_components/ChannelMembersModal'
 import AddMemberToChannelModal, {
   AddMemberToChannelModalRef,
-} from '@/app/(chat)/components/AddMemberToChannelModal'
-import DepartmentRoleVisible from '@/app/components/DepartmentRoleVisible'
+} from '@/app/(chat)/_components/AddMemberToChannelModal'
+import DepartmentRoleVisible from '@/app/_components/DepartmentRoleVisible'
 import { toast } from 'react-hot-toast'
 
 export default function DepartmentChannelChat() {

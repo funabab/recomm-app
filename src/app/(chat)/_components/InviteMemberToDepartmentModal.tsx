@@ -9,7 +9,7 @@ import React, {
   useState,
   useTransition,
 } from 'react'
-import { inviteMemberToDepartment } from '@/app/actions/department'
+import { inviteMemberToDepartment } from '@/app/_actions/department'
 
 interface Props {
   departmentId: string

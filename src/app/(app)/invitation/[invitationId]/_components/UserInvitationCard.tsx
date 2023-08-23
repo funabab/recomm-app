@@ -1,7 +1,7 @@
 'use client'
 
-import { acceptDepartmentInvitation } from '@/app/actions/department'
-import AuthModal from '@/app/components/AuthModal'
+import { acceptDepartmentInvitation } from '@/app/_actions/department'
+import AuthModal from '@/app/_components/AuthModal'
 import { firebaseAuth } from '@/firebase/client'
 import { Department, Invitation } from '@/typings'
 import { USER_ROLES } from '@/utils/constants'

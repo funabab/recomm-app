@@ -5,11 +5,11 @@ import { collection, orderBy, query } from 'firebase/firestore'
 import { firebaseFirestore } from '@/firebase/client'
 import { invitationConverter } from '@/firebase/converters'
 import dayjs from 'dayjs'
-import Loader from '@/app/components/Loader'
+import Loader from '@/app/_components/Loader'
 import { useTransition } from 'react'
 import { BsTrash } from 'react-icons/bs'
 import { toast } from 'react-hot-toast'
-import { deleteUserInvitation } from '@/app/actions/department'
+import { deleteUserInvitation } from '@/app/_actions/department'
 
 export default function BackofficeTabInvitations() {
   const [invitations, isLoading] = useCollectionData(

@@ -1,11 +1,11 @@
-import './styles/global.css'
+import './_styles/global.css'
 
 import { fontLato } from '@/utils/fonts'
 import clsx from 'clsx'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Toaster } from 'react-hot-toast'
-import RouteProgressbar from '../components/RouteProgressbar'
+import RouteProgressbar from '../_components/RouteProgressbar'
 
 interface Props {
   children: React.ReactNode

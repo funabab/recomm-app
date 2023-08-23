@@ -1,8 +1,8 @@
 'use client'
 
-import Loader from '@/app/components/Loader'
+import Loader from '@/app/_components/Loader'
 import { firebaseFirestore } from '@/firebase/client'
-import { departmentChannelMemberConverter } from '@/firebase/converters'
+import { departmentMemberConverter } from '@/firebase/converters'
 import { UserRole } from '@/typings'
 import { initialFromTitleText } from '@/utils/commons'
 import { USER_ROLES } from '@/utils/constants'
@@ -10,7 +10,7 @@ import { collection, query, where } from 'firebase/firestore'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 
 interface Props {
-  channelId: string
+  departmentId: string
   filter?: string
 }
 
@@ -20,12 +20,12 @@ const userRoleRanking: Record<UserRole, number> = {
   staff: 1,
 }
 
-export default function ChannelMemberList({ channelId, filter }: Props) {
+export default function DepartmentMemberList({ departmentId, filter }: Props) {
   const [members, isLoading] = useCollectionData(
     query(
-      collection(firebaseFirestore, 'departmentChannelMembers'),
-      where('channelId', '==', channelId)
-    ).withConverter(departmentChannelMemberConverter)
+      collection(firebaseFirestore, 'departmentMembers'),
+      where('departmentId', '==', departmentId)
+    ).withConverter(departmentMemberConverter)
   )
 
   if (isLoading) {
@@ -33,7 +33,7 @@ export default function ChannelMemberList({ channelId, filter }: Props) {
   }
 
   return (
-    <ul className="h-full space-y-5 overflow-y-auto">
+    <ul className="h-full space-y-5">
       {members
         ?.sort(
           (a, b) => userRoleRanking[b.userRole] - userRoleRanking[a.userRole]

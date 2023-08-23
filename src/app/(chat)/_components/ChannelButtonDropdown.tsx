@@ -3,7 +3,7 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { initialFromTitleText } from '@/utils/commons'
 import { BiLogOut } from 'react-icons/bi'
-import DepartmentRoleVisible from '@/app/components/DepartmentRoleVisible'
+import DepartmentRoleVisible from '@/app/_components/DepartmentRoleVisible'
 import { AiOutlineUserAdd } from 'react-icons/ai'
 import { LiaEdit } from 'react-icons/lia'
 import { useDepartmentValues } from './DepertmentProvider'

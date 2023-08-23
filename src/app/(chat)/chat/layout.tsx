@@ -1,8 +1,8 @@
 import { ErrorBoundary } from 'react-error-boundary'
-import DepartmentNotFoundProvider from '../components/DepartmentNotFoundProvider'
-import ProfileRightSider from '../components/ProfileRightSider'
+import DepartmentNotFoundProvider from '../_components/DepartmentNotFoundProvider'
+import ProfileRightSider from '../_components/ProfileRightSider'
 import NotFound from './not-found'
-import NotFoundErrorBoundary from '../components/NotFoundHandler'
+import NotFoundErrorBoundary from '../_components/NotFoundHandler'
 
 interface Props {
   children: React.ReactNode

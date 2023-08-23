@@ -3,14 +3,14 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import { toast } from 'react-hot-toast'
 import { RxCross2 } from 'react-icons/rx'
-import { createDepartmentChannel } from '@/app/actions/departmentChannel'
+import { createDepartmentChannel } from '@/app/_actions/departmentChannel'
 import React, {
   useImperativeHandle,
   useRef,
   useState,
   useTransition,
 } from 'react'
-import { useUser } from '@/app/components/AuthProtect'
+import { useUser } from '@/app/_components/AuthProtect'
 
 interface Props {
   departmentId: string

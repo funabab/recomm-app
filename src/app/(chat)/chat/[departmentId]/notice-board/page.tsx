@@ -1,10 +1,10 @@
 'use client'
 
-import ChannelChatMessage from '@/app/(chat)/components/ChannelChatMessage'
-import ChannelChatMessageInput from '@/app/(chat)/components/ChannelChatMessageInput'
-import { useDepartmentValues } from '@/app/(chat)/components/DepertmentProvider'
-import { useUser } from '@/app/components/AuthProtect'
-import { LoaderScreen } from '@/app/components/Loader'
+import ChannelChatMessage from '@/app/(chat)/_components/ChannelChatMessage'
+import ChannelChatMessageInput from '@/app/(chat)/_components/ChannelChatMessageInput'
+import { useDepartmentValues } from '@/app/(chat)/_components/DepertmentProvider'
+import { useUser } from '@/app/_components/AuthProtect'
+import { LoaderScreen } from '@/app/_components/Loader'
 import { firebaseFirestore } from '@/firebase/client'
 import {
   departmentBoardMessageConverter,

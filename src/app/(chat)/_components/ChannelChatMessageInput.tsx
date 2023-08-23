@@ -1,6 +1,6 @@
 'use client'
 
-import '../styles/channel-chat-message-box.css'
+import '../_styles/channel-chat-message-box.css'
 import { StarterKit } from '@tiptap/starter-kit'
 import { useEditor, EditorContent } from '@tiptap/react'
 import { Placeholder } from '@tiptap/extension-placeholder'
@@ -17,7 +17,6 @@ import * as Popover from '@radix-ui/react-popover'
 import emojiData from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { useEffect, useRef, useState } from 'react'
-import clsx from 'clsx'
 
 type Reference = { label: string; value: string | undefined }
 interface Props {

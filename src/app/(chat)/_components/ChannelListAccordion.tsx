@@ -1,6 +1,6 @@
 'use client'
 import React, { useRef } from 'react'
-import DepartmentRoleVisible from '@/app/components/DepartmentRoleVisible'
+import DepartmentRoleVisible from '@/app/_components/DepartmentRoleVisible'
 import * as Accordion from '@radix-ui/react-accordion'
 import Link from 'next/link'
 import { AiFillCaretDown, AiFillPlusSquare } from 'react-icons/ai'

@@ -1,6 +1,6 @@
 import React from 'react'
-import LoginCard from '../components/LoginCard'
-import AuthRedirect from '../components/AuthRedirect'
+import LoginCard from '../_components/LoginCard'
+import AuthRedirect from '../_components/AuthRedirect'
 
 export default function Login() {
   return (

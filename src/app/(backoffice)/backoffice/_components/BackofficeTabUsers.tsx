@@ -8,10 +8,10 @@ import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { collection, orderBy, query } from 'firebase/firestore'
 import { firebaseFirestore } from '@/firebase/client'
 import { departmentConverter, userConverter } from '@/firebase/converters'
-import Loader from '@/app/components/Loader'
+import Loader from '@/app/_components/Loader'
 import { USER_ROLES } from '@/utils/constants'
 import dayjs from 'dayjs'
-import { inviteUserToDepartment } from '@/app/actions/department'
+import { inviteUserToDepartment } from '@/app/_actions/department'
 
 export default function BackofficeTabUsers() {
   const [createUserDialogOpen, setCreateUserDialogOpen] = useState(false)

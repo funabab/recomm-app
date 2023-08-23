@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import Loader from '@/app/components/Loader'
+import Loader from '@/app/_components/Loader'
 import { firebaseFirestore } from '@/firebase/client'
 import { doc } from 'firebase/firestore'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'

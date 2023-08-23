@@ -1,4 +1,4 @@
-import BackofficeTabs from './components/BackofficeTabs'
+import BackofficeTabs from './_components/BackofficeTabs'
 
 export default function Backoffice() {
   return (

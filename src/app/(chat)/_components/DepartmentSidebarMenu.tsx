@@ -1,6 +1,6 @@
 'use client'
 
-import { useUser } from '@/app/components/AuthProtect'
+import { useUser } from '@/app/_components/AuthProtect'
 import { initialFromTitleText } from '@/utils/commons'
 import clsx from 'clsx'
 import Link from 'next/link'

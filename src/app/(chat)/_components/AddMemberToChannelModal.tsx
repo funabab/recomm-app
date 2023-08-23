@@ -13,12 +13,12 @@ import {
   departmentChannelMemberConverter,
   userConverter,
 } from '@/firebase/converters'
-import Loader from '@/app/components/Loader'
+import Loader from '@/app/_components/Loader'
 import { UserRole } from '@/typings'
 import { USER_ROLES } from '@/utils/constants'
-import { addMemberToChannel } from '@/app/actions/departmentChannel'
+import { addMemberToChannel } from '@/app/_actions/departmentChannel'
 import { toast } from 'react-hot-toast'
-import DepartmentRoleVisible from '@/app/components/DepartmentRoleVisible'
+import DepartmentRoleVisible from '@/app/_components/DepartmentRoleVisible'
 
 const userRoleRanking: Record<UserRole, number> = {
   admin: 3,

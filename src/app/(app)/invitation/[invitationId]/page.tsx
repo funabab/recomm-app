@@ -3,7 +3,7 @@ import { Department, Invitation } from '@/typings'
 import dayjs from 'dayjs'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import UserInvitationCard from './components/UserInvitationCard'
+import UserInvitationCard from './_components/UserInvitationCard'
 
 export const metadata: Metadata = {
   title: 'Recomm Invitation',

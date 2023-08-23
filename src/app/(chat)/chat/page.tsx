@@ -1,8 +1,8 @@
 'use client'
 
-import { useUser } from '@/app/components/AuthProtect'
-import { LoaderScreen } from '@/app/components/Loader'
-import IconChat from '@/app/components/icons/IconChat'
+import { useUser } from '@/app/_components/AuthProtect'
+import { LoaderScreen } from '@/app/_components/Loader'
+import IconChat from '@/app/_components/icons/IconChat'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 

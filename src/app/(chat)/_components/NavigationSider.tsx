@@ -1,6 +1,6 @@
 'use client'
 
-import DepartmentRoleVisible from '@/app/components/DepartmentRoleVisible'
+import DepartmentRoleVisible from '@/app/_components/DepartmentRoleVisible'
 import ChannelButton from './ChannelButton'
 import { LiaEdit } from 'react-icons/lia'
 import { AiOutlineComment, AiOutlineFile } from 'react-icons/ai'

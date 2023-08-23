@@ -1,4 +1,4 @@
-import { useUser } from '@/app/components/AuthProtect'
+import { useUser } from '@/app/_components/AuthProtect'
 import { DepartmentChannelMessage } from '@/typings'
 import { initialFromTitleText } from '@/utils/commons'
 import { USER_ROLES } from '@/utils/constants'
