@@ -11,6 +11,7 @@ import { Toaster } from 'react-hot-toast'
 import DepartmentProvider from './_components/DepertmentProvider'
 import NavigationSider from './_components/NavigationSider'
 import RouteProgressbar from '../_components/RouteProgressbar'
+import SearchBar from './_components/SearchBar'
 
 export const metadata: Metadata = {
   title: 'Recomm - Department Communication',
@@ -41,14 +42,7 @@ export default function AppRootLayout({ children }: Props) {
                 >
                   <BiMenuAltLeft />
                 </label>
-                <div className="relative flex-1 max-w-[500px] lg:ml-24">
-                  <input
-                    type="search"
-                    className="input input-bordered flex-1 bg-transparent text-[13px] h-6 w-full text-center placeholder-gray-500 peer font-lato"
-                    placeholder="Search Channel"
-                  />
-                  <BiSearch className="absolute left-1/2 top-1/2 -translate-y-1 h-3 text-gray-500 -translate-x-[70px] hidden peer-placeholder-shown:inline-block" />
-                </div>
+                <SearchBar />
                 <UserAvatar />
               </header>
               <div className="drawer lg:drawer-open flex-1 relative min-h-0">

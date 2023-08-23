@@ -1,4 +1,4 @@
-@import 'tailwindcss/tailwind.css';
+@import '../../_styles/globals.css';
 
 #nprogress .bar {
   @apply h-2 bg-primary-focus;
