@@ -4,6 +4,7 @@ export interface Department {
   id: string
   title: string
   membersCount?: number
+  resourcesCount?: number
   description: string
   createdAt: Timestamp
 }

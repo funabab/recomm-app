@@ -17,13 +17,29 @@ import {
   setDoc,
   where,
 } from 'firebase/firestore'
-import { useCollectionData } from 'react-firebase-hooks/firestore'
-import { departmentResourceConverter } from '@/firebase/converters'
+import {
+  useCollectionData,
+  useDocumentData,
+} from 'react-firebase-hooks/firestore'
+import {
+  departmentConverter,
+  departmentResourceConverter,
+} from '@/firebase/converters'
 import { BiLinkExternal } from 'react-icons/bi'
+import { num } from '@/utils/commons'
+import prettyBytes from 'pretty-bytes'
 
 export default function ResourcePage() {
   const user = useUser()
   const { currentDepartment } = useDepartmentValues()
+  const [department] = useDocumentData(
+    currentDepartment
+      ? doc(
+          firebaseFirestore,
+          `departments/${currentDepartment.id}`
+        ).withConverter(departmentConverter)
+      : null
+  )
   const [departmentResources] = useCollectionData(
     currentDepartment
       ? query(
@@ -72,6 +88,7 @@ export default function ResourcePage() {
         setDoc(fileDoc, {
           access,
           uploadFilePath: uploadTask.snapshot.ref.fullPath,
+          uploadedFileSize: uploadTask.snapshot.totalBytes,
           uploadFilename: file.name,
           uploadUserId: user?.uid,
           uploadUserDepartmentId: currentDepartment?.id,
@@ -94,7 +111,7 @@ export default function ResourcePage() {
           <p className="text-[13px] m-0 text-neutral/60 mt-px flex items-center">
             <BsFiles />
             <span className="pl-1 pr-2 border-r border-r-neutral-content">
-              0
+              {num(department?.resourcesCount)}
             </span>
             <span className="px-2 truncate max-w-[10rem] lg:max-w-2xl">
               Department Resources
@@ -113,6 +130,7 @@ export default function ResourcePage() {
             <tr>
               <th>#</th>
               <th>Resource name</th>
+              <th>Resource Size</th>
               <th>Uploaded By</th>
               <th className="text-center">Upload on</th>
               <th>Access</th>
@@ -124,6 +142,11 @@ export default function ResourcePage() {
               <tr key={resource.id}>
                 <td>{index + 1}</td>
                 <td>{resource.uploadFilename}</td>
+                <td>
+                  {prettyBytes(resource.uploadedFileSize, {
+                    space: false,
+                  })}
+                </td>
                 <td>{resource.uploadUserDisplayName}</td>
                 <td>
                   {dayjs(resource.uploadedAt?.toDate()).format('DD MMMM, YYYY')}
