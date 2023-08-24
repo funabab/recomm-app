@@ -62,7 +62,7 @@ export default function DepartmentNoticeBoard() {
   }
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <main className="w-full h-full flex flex-col">
       <header className="px-[22px] border-b border-b-neutral-content flex flex-row items-center justify-center h-16">
         <div>
           <div className="flex flex-row gap-x-1 items-center">
@@ -148,6 +148,6 @@ export default function DepartmentNoticeBoard() {
           />
         </div>
       </div>
-    </div>
+    </main>
   )
 }

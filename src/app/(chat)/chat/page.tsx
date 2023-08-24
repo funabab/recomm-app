@@ -21,7 +21,7 @@ export default function ChatHome() {
   }
 
   return (
-    <div className="w-full h-full justify-center items-center font-lato flex flex-col gap-y-2">
+    <main className="w-full h-full justify-center items-center font-lato flex flex-col gap-y-2">
       <IconChat className="h-40" />
       <h2 className="text-2xl font-bold text-neutral mt-5">Recomm App</h2>
       <p>
@@ -34,6 +34,6 @@ export default function ChatHome() {
           </span>
         )}
       </p>
-    </div>
+    </main>
   )
 }

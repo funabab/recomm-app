@@ -40,10 +40,13 @@ export default function NavigationSider() {
           <AiOutlineComment />
           Notice Board
         </Link>
-        <button className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary no-animation">
+        <Link
+          href={`/chat/${departmentId}/resources`}
+          className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary no-animation"
+        >
           <AiOutlineFile />
           Resources
-        </button>
+        </Link>
 
         <ChannelListAccordion collapsible />
       </div>
