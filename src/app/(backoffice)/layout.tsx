@@ -3,7 +3,6 @@ import './_styles/global.css'
 import { fontLato } from '@/utils/fonts'
 import clsx from 'clsx'
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
 import { Toaster } from 'react-hot-toast'
 import RouteProgressbar from '../_components/RouteProgressbar'
 
@@ -16,10 +15,6 @@ export const metadata: Metadata = {
 }
 
 export default function BackofficeRootLayout({ children }: Props) {
-  if (process.env.NODE_ENV !== 'development') {
-    notFound()
-  }
-
   return (
     <html lang="en" className={clsx(fontLato.variable)} data-theme="appTheme">
       <body>
