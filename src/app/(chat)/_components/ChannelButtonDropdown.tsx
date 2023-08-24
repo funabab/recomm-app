@@ -13,6 +13,9 @@ import React, { useRef } from 'react'
 import InviteMemberToDepartmentModal, {
   InviteMemberToDepartmentModalRef,
 } from './InviteMemberToDepartmentModal'
+import EditDepartmentModal, {
+  EditDepartmentModalRef,
+} from './EditDepartmentModal'
 
 interface Props extends DropdownMenu.DropdownMenuProps {
   triggerElement?: React.ReactNode
@@ -26,6 +29,7 @@ export default function ChannelButtonPopup({
   const [signOut] = useSignOut(firebaseAuth)
   const inviteMemeberToDepartmentModalRef =
     useRef<InviteMemberToDepartmentModalRef>(null)
+  const editDepartmentModalRef = useRef<EditDepartmentModalRef>(null)
 
   return (
     <React.Fragment>
@@ -63,7 +67,10 @@ export default function ChannelButtonPopup({
             <DropdownMenu.Separator className="h-[1px] bg-neutral-content mt-5" />
             <DepartmentRoleVisible roles={['admin', 'hod']}>
               <DropdownMenu.Item className="outline-none">
-                <button className="btn btn-ghost btn-block btn-sm text-xs rounded-none justify-start no-animation">
+                <button
+                  className="btn btn-ghost btn-block btn-sm text-xs rounded-none justify-start no-animation"
+                  onClick={() => editDepartmentModalRef.current?.showModal()}
+                >
                   <LiaEdit />
                   Edit Department
                 </button>
@@ -102,6 +109,7 @@ export default function ChannelButtonPopup({
           ref={inviteMemeberToDepartmentModalRef}
         />
       )}
+      {<EditDepartmentModal ref={editDepartmentModalRef} />}
     </React.Fragment>
   )
 }
