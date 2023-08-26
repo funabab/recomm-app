@@ -10,18 +10,21 @@ import { auth } from 'firebase-functions/v1'
 import { onDocumentWritten } from 'firebase-functions/v2/firestore'
 import { getAuth } from 'firebase-admin/auth'
 
-export const onBeforeAccountCreated = beforeUserCreated(async (user) => {
+export const onBeforeAccountCreated = beforeUserCreated(async (event) => {
   const firestore = getFirestore()
   const invitations = await firestore
     .collection('invitations')
-    .where('email', '==', user.data.email)
+    .where('email', '==', event.data.email)
     .get()
 
   const activeInvitation = invitations.docs.find((invitation) =>
     dayjs((invitation.data() as Invitation).expiresAt.toDate()).isAfter(dayjs())
   )
 
-  if (!activeInvitation) {
+  if (
+    event.additionalUserInfo?.providerId !== 'google.com' &&
+    !activeInvitation
+  ) {
     throw new HttpsError(
       'aborted',
       "Can't create account without an invitation"
@@ -32,9 +35,11 @@ export const onBeforeAccountCreated = beforeUserCreated(async (user) => {
 export const onBeforeAccountSignIn = beforeUserSignedIn(async (user) => {
   if (user.credential?.providerId === 'google.com') {
     const firestore = getFirestore()
+
     const backofficeSysDoc = await firestore.doc(`system/backoffice`).get()
     const allowedGmails: string[] | undefined =
       backofficeSysDoc.data()?.allowedGmails
+
     if (!allowedGmails?.includes(user.data.email!)) {
       throw new HttpsError('aborted', 'Not authorized to login to backoffice')
     }
