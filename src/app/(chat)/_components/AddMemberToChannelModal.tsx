@@ -49,12 +49,20 @@ export default React.forwardRef<AddMemberToChannelModalRef, Props>(
       collection(firebaseFirestore, 'users').withConverter(userConverter)
     )
     const channelMemberIds = channelMembers?.map((member) => member.userId)
-    const availableUsers = users?.map((user) => ({
-      ...user,
-      role: user.memberships?.find(
-        (member) => member.departmentId === currentChannel?.departmentId
-      )?.role,
-    }))
+
+    const availableUsers = users
+      ?.filter(
+        (user) =>
+          user.memberships?.find(
+            (membership) => membership.departmentId === currentDepartment?.id
+          ) !== undefined
+      )
+      .map((user) => ({
+        ...user,
+        role: user.memberships?.find(
+          (member) => member.departmentId === currentChannel?.departmentId
+        )?.role,
+      }))
 
     useImperativeHandle(ref, () => ({
       showModal() {
