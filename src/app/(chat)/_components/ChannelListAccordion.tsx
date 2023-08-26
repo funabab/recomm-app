@@ -5,6 +5,7 @@ import * as Accordion from '@radix-ui/react-accordion'
 import Link from 'next/link'
 import { AiFillCaretDown, AiFillPlusSquare } from 'react-icons/ai'
 import { BiHash } from 'react-icons/bi'
+import { GiPadlockOpen } from 'react-icons/gi'
 import { useParams } from 'next/navigation'
 import { useDepartmentValues } from './DepertmentProvider'
 import CreateDepartmentChannelModal, {
@@ -37,6 +38,9 @@ export default function ChannelListAccordion(props: Props) {
               >
                 <BiHash />
                 {membership.channelTitle}
+                {membership.channelType === 'private' && (
+                  <GiPadlockOpen className="ml-auto" />
+                )}
               </Link>
             ))}
             <DepartmentRoleVisible roles={['admin', 'hod']}>

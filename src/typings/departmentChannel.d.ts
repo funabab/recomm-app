@@ -21,6 +21,7 @@ export interface DepartmentChannelMembership {
   userId: string
   userRole: UserRole
 
+  channelType: 'public' | 'private'
   channelTitle: string
   channelId: string
   createdAt: Timestamp
