@@ -58,17 +58,19 @@ export default React.forwardRef<ChannelMembersModalRef, Props>(
                 {currentChannel.title}
               </Dialog.Title>
 
-              <div className="shrink-0 mt-5">
-                <button
-                  className="btn btn-ghost text-primary btn-sm normal-case"
-                  onClick={() => {
-                    setIsOpen(false)
-                    addMemberToChannelModalRef.current?.showModal()
-                  }}
-                >
-                  Add Member to Channel
-                </button>
-              </div>
+              {currentChannel.type === 'private' && (
+                <div className="shrink-0 mt-5">
+                  <button
+                    className="btn btn-ghost text-primary btn-sm normal-case"
+                    onClick={() => {
+                      setIsOpen(false)
+                      addMemberToChannelModalRef.current?.showModal()
+                    }}
+                  >
+                    Add Member to Channel
+                  </button>
+                </div>
+              )}
 
               <div className="my-5">
                 <input
