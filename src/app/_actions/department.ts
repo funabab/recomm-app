@@ -46,7 +46,7 @@ export const deleteDepartment = async (departmentId: string) => {
 
 export const inviteUserToDepartment = async (formdata: FormData) => {
   const fullName = formdata.get('fullname') as string
-  const email = formdata.get('email') as string
+  const email = (formdata.get('email') as string).toLowerCase()
   const department = formdata.get('department') as string
   const role = formdata.get('role') as string
   const expiryDate = dayjs().add(15, 'minute')
@@ -105,7 +105,7 @@ export const inviteUserToDepartment = async (formdata: FormData) => {
 
 export const inviteMemberToDepartment = async (formdata: FormData) => {
   const fullName = formdata.get('fullname') as string
-  const email = formdata.get('email') as string
+  const email = (formdata.get('email') as string).toLowerCase()
   const department = formdata.get('department') as string
 
   const role: UserRole = 'staff'
