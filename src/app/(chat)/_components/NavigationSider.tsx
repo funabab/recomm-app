@@ -5,14 +5,14 @@ import ChannelButton from './ChannelButton'
 import { LiaEdit } from 'react-icons/lia'
 import { AiOutlineComment, AiOutlineFile } from 'react-icons/ai'
 import ChannelListAccordion from './ChannelListAccordion'
-import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import EditDepartmentModal from './EditDepartmentModal'
+import { useDepartmentValues } from './DepertmentProvider'
 
 export default function NavigationSider() {
-  const { departmentId } = useParams()
+  const { currentDepartment } = useDepartmentValues()
 
-  if (!departmentId) {
+  if (!currentDepartment) {
     return null
   }
 
@@ -34,18 +34,21 @@ export default function NavigationSider() {
 
       <div>
         <Link
-          href={`/chat/${departmentId}/notice-board`}
+          href={`/chat/${currentDepartment.id}/notice-board`}
           className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary no-animation"
         >
           <AiOutlineComment />
           Notice Board
         </Link>
         <Link
-          href={`/chat/${departmentId}/resources`}
+          href={`/chat/${currentDepartment.id}/resources`}
           className="btn btn-ghost font-lato font-bold text-[15px] w-full justify-start rounded-none text-primary no-animation"
         >
           <AiOutlineFile />
           Resources
+          <div className="badge badge-primary badge-sm ml-auto">
+            {currentDepartment.resourcesCount}
+          </div>
         </Link>
 
         <ChannelListAccordion collapsible />
