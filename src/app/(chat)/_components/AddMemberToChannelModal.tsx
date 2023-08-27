@@ -16,7 +16,10 @@ import {
 import Loader from '@/app/_components/Loader'
 import { UserRole } from '@/typings'
 import { USER_ROLES } from '@/utils/constants'
-import { addMemberToChannel } from '@/app/_actions/departmentChannel'
+import {
+  addMemberToChannel,
+  removeMemberFromChannel,
+} from '@/app/_actions/departmentChannel'
 import { toast } from 'react-hot-toast'
 import DepartmentRoleVisible from '@/app/_components/DepartmentRoleVisible'
 
@@ -146,6 +149,34 @@ export default React.forwardRef<AddMemberToChannelModalRef, Props>(
                             </span>
                           </div>
                         </div>
+
+                        {currentChannel.author !== member.uid &&
+                          channelMemberIds.includes(member.uid) &&
+                          currentChannel.type === 'private' && (
+                            <DepartmentRoleVisible roles={['admin', 'hod']}>
+                              <button
+                                className="btn btn-ghost btn-sm text-red-600"
+                                onClick={() => {
+                                  startAddUserTransition(async () => {
+                                    try {
+                                      const { message } =
+                                        await removeMemberFromChannel({
+                                          channelId: currentChannel.id,
+                                          memberId: member.uid,
+                                        })
+                                      toast.success(message)
+                                    } catch (e) {
+                                      const err = e as Error
+                                      toast.error(err.message)
+                                    }
+                                  })
+                                }}
+                                disabled={isPendingAddMember}
+                              >
+                                Remove
+                              </button>
+                            </DepartmentRoleVisible>
+                          )}
 
                         {!channelMemberIds.includes(member.uid) &&
                           currentChannel.type === 'private' && (

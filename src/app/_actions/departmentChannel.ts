@@ -139,3 +139,37 @@ export const addMemberToChannel = async (body: {
     message: 'Member added successfully',
   }
 }
+
+export const removeMemberFromChannel = async (body: {
+  memberId: string
+  channelId: string
+}) => {
+  const user = await firebaseAdminFirestore.doc(`users/${body.memberId}`).get()
+  const channel = await firebaseAdminFirestore
+    .doc(`departmentChannels/${body.channelId}`)
+    .get()
+
+  const channelMembership = await firebaseAdminFirestore
+    .collection('departmentChannelMembers')
+    .where('channelId', '==', body.channelId)
+    .where('userId', '==', body.memberId)
+    .get()
+
+  if (!channelMembership.docs[0]?.exists) {
+    throw new Error('Member does not exist in department')
+  }
+
+  if (!user.exists) {
+    throw new Error('User does not exist')
+  }
+
+  if (!channel.exists) {
+    throw new Error('Channel does not exist')
+  }
+
+  await channelMembership.docs[0].ref.delete()
+
+  return {
+    message: 'Member removed successfully',
+  }
+}
