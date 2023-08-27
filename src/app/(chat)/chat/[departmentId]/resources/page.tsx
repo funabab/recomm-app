@@ -1,12 +1,14 @@
 'use client'
 
-import { BsFiles } from 'react-icons/bs'
+import { useTransition } from 'react'
+import { BsFiles, BsTrash } from 'react-icons/bs'
 import FileUploader from './_components/FileUploader'
 import { ProcessServerConfigFunction } from 'filepond'
 import { useUser } from '@/app/_components/AuthProtect'
 import { useDepartmentValues } from '@/app/(chat)/_components/DepertmentProvider'
 import { firebaseFirestore, firebaseStorage } from '@/firebase/client'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import { deleteDoc } from 'firebase/firestore'
 import mime from 'mime-types'
 import dayjs from 'dayjs'
 import {
@@ -28,9 +30,11 @@ import {
 import { BiLinkExternal } from 'react-icons/bi'
 import { num } from '@/utils/commons'
 import prettyBytes from 'pretty-bytes'
+import { toast } from 'react-hot-toast'
 
 export default function ResourcePage() {
   const user = useUser()
+  const [isPendingDeleteTransition, startDeleteTransition] = useTransition()
   const { currentDepartment } = useDepartmentValues()
   const [department] = useDocumentData(
     currentDepartment
@@ -152,7 +156,7 @@ export default function ResourcePage() {
                   {dayjs(resource.uploadedAt?.toDate()).format('DD MMMM, YYYY')}
                 </td>
                 <td>{resource.access}</td>
-                <td>
+                <td className="flex items-center gap-x-2">
                   <button
                     className="btn btn-sm btn-link"
                     onClick={async () => {
@@ -164,6 +168,26 @@ export default function ResourcePage() {
                   >
                     View <BiLinkExternal />
                   </button>
+                  {resource.uploadUserId === user?.uid && (
+                    <button
+                      className="btn btn-sm btn-circle btn-error text-lg"
+                      onClick={() => {
+                        startDeleteTransition(async () => {
+                          await deleteDoc(
+                            doc(
+                              firebaseFirestore,
+                              'departmentResources',
+                              resource.id
+                            )
+                          )
+                          toast.success('Resource deleted successfully')
+                        })
+                      }}
+                      disabled={isPendingDeleteTransition}
+                    >
+                      <BsTrash />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

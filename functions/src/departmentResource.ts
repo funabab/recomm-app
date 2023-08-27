@@ -1,5 +1,9 @@
 import { FieldValue, getFirestore } from 'firebase-admin/firestore'
-import { onDocumentWritten } from 'firebase-functions/v2/firestore'
+import { getStorage } from 'firebase-admin/storage'
+import {
+  onDocumentDeleted,
+  onDocumentWritten,
+} from 'firebase-functions/v2/firestore'
 
 export const onDepartmentDepartmentResourceCollectionUpdated =
   onDocumentWritten('departmentResources/{resourceId}', async (event) => {
@@ -16,3 +20,15 @@ export const onDepartmentDepartmentResourceCollectionUpdated =
       })
     }
   })
+
+export const onDepartmentDepartmentResourceCollectionDelete = onDocumentDeleted(
+  'departmentResources/{resourceId}',
+  async (event) => {
+    const storage = getStorage()
+
+    const referencedFile = storage
+      .bucket()
+      .file(event.data?.data().uploadFilePath)
+    await referencedFile.delete()
+  }
+)
