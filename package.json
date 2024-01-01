@@ -64,7 +64,7 @@
     "react-hot-toast": "^2.4.1",
     "react-icons": "^4.10.1",
     "react-loader-spinner": "^5.3.4",
-    "resend": "^0.17.2",
+    "resend": "^2.1.0",
     "sanitize-html": "^2.11.0",
     "tailwind-merge": "^1.14.0",
     "tailwind-scrollbar": "^3.0.4",
